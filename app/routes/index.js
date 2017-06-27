@@ -1,7 +1,7 @@
 // app/routes/index.js
 
 const
-  _                 = require('lodash')
+  _                 = require('../lib/lodashExt')
   , fs                = require('fs')
   , path              = require('path')
   , moment            = require('moment')

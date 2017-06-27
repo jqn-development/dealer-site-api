@@ -2,7 +2,7 @@
 
 // Dependencies
 const
-  _                   = require('lodash')
+  _                   = require('./lib/lodashExt')
   , fs                = require('fs')
   , http              = require('http')
   , https             = require('https')
@@ -22,13 +22,7 @@ const
 ;
 
 let Models = {};
-
-_.isUnset = (obj) => {
-  return (_.isNull(obj) || _.isUndefined(obj));
-}
-_.isSet = (obj) => {
-  return !(_.isUnset(obj));
-}
+let server = {};
 
 /* ****************************************************************************
  *  Server Class

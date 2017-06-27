@@ -1,7 +1,7 @@
 // app/models/dealer.js
 
 const
-  _                 = require('lodash')
+  _                 = require('../lib/lodashExt')
   , fs                = require('fs')
   , moment            = require('moment')
   , sequelize         = require('sequelize')

@@ -2,7 +2,7 @@
 
 // Dependencies
 const
-  _                 = require('lodash')
+  _                 = require('./lodashExt')
   , fs                = require('fs')
   , moment            = require('moment')
   , mysql             = require('mysql2')
