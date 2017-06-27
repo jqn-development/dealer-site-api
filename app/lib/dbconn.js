@@ -21,7 +21,8 @@ class DBConn {
       host: this.creds.host,
       port: this.creds.port,
       dialect: 'mysql',
-      pool: this.dbconf.pool
+      pool: this.dbconf.pool,
+      logging: logger.info
     });
   }
 
