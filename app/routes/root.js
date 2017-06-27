@@ -9,7 +9,7 @@ const
   , winston           = require('winston')
 ;
 
-module.exports = function(app, log, models) {
+module.exports = function(app, dbconn, models, log) {
 
   // Handles the logic when the '/' endpoint is touched
   app.get('/', function(req, res) {

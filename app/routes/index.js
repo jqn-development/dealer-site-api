@@ -18,7 +18,7 @@ const
  * The `app` is passed in through a paired `require('thisLib')(app)` statement
  * inside the host code.
  */
-function loadRoutes(app, log, models) {
+function loadRoutes(app, dbconn, models, log) {
   log.info("Loading Routes...");
   fs.readdirSync(__dirname)
     .filter(function(file) {
@@ -27,7 +27,7 @@ function loadRoutes(app, log, models) {
     .forEach(function(file) {
       let name = file.substr(0, file.indexOf('.'));
       log.info(`Loading Route: '${name}'`);
-      require(path.join(__dirname, file))(app, log, models);
+      require(path.join(__dirname, file))(app, dbconn, models, log);
     });
 }
 

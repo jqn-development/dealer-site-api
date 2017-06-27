@@ -36,17 +36,22 @@ class Server {
     this.router = {};
     this.log = {};
     this.dbconn = {};
-
-    // Setup graceful exit for SIGTERM and SIGINT
-    process.on('SIGTERM', this.handleSIGTERM);
-    process.on('SIGINT', this.handleSIGINT);
   }
 
   /* ****************************************************************************
    *  Server Shutdown Logic
    * ***************************************************************************/
-  shutdown(code) {
+  handleSIGTERM() {
+   this.close(15);
+  }
+
+  handleSIGINT() {
+    this.close(2);
+  }
+
+  close(code) {
     let sigCode;
+    if (_.isUnset(code)) code = 0;
     switch (code) {
       case 2:
         sigCode = 'SIGINT';
@@ -60,22 +65,27 @@ class Server {
     }
     this.log.info(`Received exit code ${sigCode}, performing graceful shutdown`);
     // TODO: Perform gracful shutdown here
-    if (_.isSet(server)) server.close();
+    if (_.hasValue(server)) this.server.close();
     process.exit(code);
   }
-
-  handleSIGTERM() {
-    this.shutdown(15);
-  }
-
-  handleSIGINT() {
-    this.shutdown(2);
-  }
-
 
   /* ****************************************************************************
    *  Middleware functions
    * ***************************************************************************/
+   sendError(err, req, res) {
+     let code = req.errorCode || 500001;
+     let error = errInfo[code];
+     let errorBlock = {
+       errorStatus: error.status,
+       errorCode: code,
+       errorMsg: error.message,
+       callID: req.callID
+     };
+     if (_.hasValue(err)) errorBlock.error = JSON.stringify(err);
+     res.status(error.status);
+     res.send(errorBlock);
+   }
+
   attachCallID(req, res, next) {
     // Generate CallID attach to the request object
     req.callID = uuidv4();
@@ -102,27 +112,13 @@ class Server {
   }
 
   errorHandler(err, req, res, next) {
-    if (_.isUnSet(req.errorCode) ) req.errorCode = 500001;
+    if (_.isUnset(req.errorCode) ) req.errorCode = 500001;
     this.sendError(err, req, res);
   }
 
   handle404Error(req, res, next) {
     req.errorCode = 404000;
     this.sendError(null, req, res);
-  }
-
-  sendError(err, req, res) {
-    code = req.errorCode || 500001;
-    error = errInfo[code];
-    res.status(error.status);
-    errorBlock = {
-      errorStatus: error.status,
-      errorCode: code,
-      errorMsg: error.message,
-      callID: req.callID
-    };
-    if (_.isSet(err)) errorBlock.error = JSON.stringify(err);
-    res.send(errorBlock);
   }
 
   sendStatus(req, res) {
@@ -133,6 +129,10 @@ class Server {
    *  Server Initialization Logic
    * ***************************************************************************/
   init() {
+    // Setup graceful exit for SIGTERM and SIGINT
+    process.on('SIGTERM', this.handleSIGTERM.bind(this));
+    process.on('SIGINT', this.handleSIGINT.bind(this));
+
     this.setupLogging();
     this.setupDBConnection();
     this.setupServer(this.app);
@@ -167,18 +167,19 @@ class Server {
     Models = require('./models')(this.log);          // load models
 
     // middleware to use for all requests
-    app.use(this.attachCallID);
-    app.use(this.authenticateRequest);
-    app.use(this.logRequest);
-    app.use(this.logErrors);
-    app.use(this.clientErrorHandler);
-    app.use(this.errorHandler);
+    // The 'bind' statements are there to preserve the context
+    app.use(this.attachCallID.bind(this));
+    app.use(this.authenticateRequest.bind(this));
+    app.use(this.logRequest.bind(this));
+    app.use(this.logErrors.bind(this));
+    app.use(this.clientErrorHandler.bind(this));
+    //app.use(this.errorHandler);
 
     app.use('/site', this.router);   // Setup the base server application
 
-    require('./routes')(this.router, this.log, Models);   // load routes
+    require('./routes')(this.router, this.dbconn, Models, this.log);   // load routes
 
-    app.use(this.handle404Error);
+    app.use(this.handle404Error.bind(this));
 
     // Start the server
     this.server = app.listen(this.port)
@@ -188,8 +189,8 @@ class Server {
 
 if (require.main === module) {
   // Invoked from Command Line
-  S = new Server(config);
-  S.init();
+  server = new Server(config);
+  server.init();
 } else {
   // Invoked through requires include
   module.exports = Server;
