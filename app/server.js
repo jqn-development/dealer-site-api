@@ -2,7 +2,7 @@
 
 // Dependencies
 const
-  _                 = require('lodash')
+  _                   = require('lodash')
   , fs                = require('fs')
   , http              = require('http')
   , https             = require('https')
@@ -15,7 +15,8 @@ const
   , bodyParser        = require('body-parser')
 
   , Logger            = require('./lib/logger')
-  , DBConn            = require('./lib/dbconn')
+  , DBConn            = require('./lib/dbConn')
+  , errInfo           = require('./lib/errInfo')
 
   , config            = require('../config/config')
 ;
@@ -30,7 +31,6 @@ _.isUnset = (obj) => {
 _.isSet = (obj) => {
   return !(_.isUnset(obj));
 }
-
 
 let server;
 let port = config.server.port || 8080;  // Configure the port number
@@ -47,13 +47,16 @@ function handleSigint() {
 }
 
 function shutdown(code) {
-  let sigCode = code;
+  let sigCode;
   switch (code) {
     case 2:
       sigCode = 'SIGINT';
       break;
     case 15:
       sigCode = 'SIGTERM';
+      break;
+    default:
+      sigCode = code;
       break;
   }
   log.info(`Received exit code ${sigCode}, performing graceful shutdown`);
@@ -105,28 +108,31 @@ function clientErrorHandler(err, req, res, next) {
 }
 
 function errorHandler(err, req, res, next) {
-  if (_.isUnSet(req.errorStatus) ) req.errorStatus = 500;
   if (_.isUnSet(req.errorCode) ) req.errorCode = 500001;
   sendError(err, req, res);
 }
 
 function handle404Error(req, res, next) {
-  req.errorStatus = 404;
   req.errorCode = 404000;
-  req.errorMsg = "The resource requested does not exist or you are not authorized to access it.";
   sendError(null, req, res);
 }
 
 function sendError(err, req, res) {
-  res.status(req.errorStatus || 500);
+  code = req.errorCode || 500001;
+  error = errInfo[code];
+  res.status(error.status);
   errorBlock = {
-    errorStatus: req.errorStatus,
-    errorCode: req.errorCode,
-    errorMsg: req.errorMsg || "General Server Error",
+    errorStatus: error.status,
+    errorCode: code,
+    errorMsg: error.message,
     callID: req.callID
   };
   if (_.isSet(err)) errorBlock.error = JSON.stringify(err);
   res.send(errorBlock);
+}
+
+function sendStatus(req, res) {
+
 }
 
 /* ****************************************************************************
@@ -151,7 +157,7 @@ function main() {
   router = express.Router();
 
   // Load Models
-  Models = require('./models')(log);     // load models
+  Models = require('./models')(log);          // load models
 
   // middleware to use for all requests
   app.use(attachCallID);
@@ -163,7 +169,7 @@ function main() {
 
   app.use('/site', router);   // Setup the base server application
 
-  require('./routes')(router, log, Models);               // Load routes
+  require('./routes')(router, log, Models);   // load routes
 
   app.use(handle404Error);
 
