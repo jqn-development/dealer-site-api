@@ -14,7 +14,7 @@ class Vehicle {
     this.logger = logger;
 
     this.model = dbconn.conn.define('vehicle', {
-        vehicleID:                { type: sequelize.INTEGER(11), allowsNulls: false },
+        vehicleID:                { type: sequelize.INTEGER(11), allowsNulls: false, primaryKey: true },
         dealerID:                 { type: sequelize.INTEGER(11), allowsNulls: false },
         stockNumber:              { type: sequelize.STRING(50), allowsNulls: false },
         vin:                      { type: sequelize.STRING(20), allowsNulls: false },
@@ -44,7 +44,7 @@ class Vehicle {
         priceRetail:              { type: sequelize.INTEGER(11), allowsNulls: false },
         priceInternet:            { type: sequelize.INTEGER(11), allowsNulls: false },
         priceWholesale:           { type: sequelize.INTEGER(11), allowsNulls: false },
-        bookRetail:               { type: sequelize.INTEGER(11), allowsNulls: false },
+        bookValue:                { type: sequelize.INTEGER(11), allowsNulls: false },
         imageMainURL:             { type: sequelize.STRING(255), allowsNulls: true, defaultValue: '' },
         imageMainThumbURL:        { type: sequelize.STRING(255), allowsNulls: true, defaultValue: '' },
         imageStockPhotoURL:       { type: sequelize.STRING(255), allowsNulls: true, defaultValue: '' },
@@ -63,7 +63,8 @@ class Vehicle {
       }, {
         timestamps: true,
         createdAt: 'listingDate',
-        updatedAt: 'lastUpdate'
+        updatedAt: 'lastUpdated',
+        freezeTableName: true
       }
     );
   }

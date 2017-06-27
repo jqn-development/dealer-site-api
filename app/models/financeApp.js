@@ -14,7 +14,7 @@ class FinanceApp {
     this.logger = logger;
 
     this.model = dbconn.conn.define('financeApp', {
-        leadID:                   { type: sequelize.CHAR(36), allowsNulls: false, validate: { isUUID: 4 } },
+        leadID:                   { type: sequelize.CHAR(36), allowsNulls: false, validate: { isUUID: 4 }, primaryKey: true },
         dob:                      { type: sequelize.STRING(50), allowsNulls: false },
         ssn:                      { type: sequelize.STRING(50), allowsNulls: false },
         driversLicenseNumber:     { type: sequelize.STRING(50), allowsNulls: false },
@@ -40,7 +40,8 @@ class FinanceApp {
       }, {
         timestamps: true,
         createdAt: 'created',
-        updatedAt: 'lastUpdate'
+        updatedAt: 'lastUpdated',
+        freezeTableName: true
       }
     );
   }

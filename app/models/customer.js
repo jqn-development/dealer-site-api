@@ -14,7 +14,7 @@ class Customer {
     this.logger = logger;
 
     this.model = dbconn.conn.define('customer', {
-        customerID:         { type: sequelize.CHAR(36), allowsNulls: false, validate: { isUUID: 4 } },
+        customerID:         { type: sequelize.CHAR(36), allowsNulls: false, validate: { isUUID: 4 }, primaryKey: true },
         oldClientID:        { type: sequelize.INTEGER(11), allowsNulls: true },
         dealerID:           { type: sequelize.INTEGER(11), allowsNulls: false },
         email:              { type: sequelize.STRING(255), allowsNulls: true, defaultValue: null },
@@ -35,7 +35,8 @@ class Customer {
       }, {
         timestamps: true,
         createdAt: 'created',
-        updatedAt: 'lastUpdate'
+        updatedAt: 'lastUpdated',
+        freezeTableName: true
       }
     );
   }

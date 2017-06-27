@@ -14,7 +14,7 @@ class Dealer {
     this.logger = logger;
 
     this.model = dbconn.conn.define('dealer', {
-        dealerID:                       { type: sequelize.INTEGER(11), allowsNulls: false },
+        dealerID:                       { type: sequelize.INTEGER(11), allowsNulls: false, primaryKey: true },
         dealerName:                     { type: sequelize.STRING(70), allowsNulls: false },
         address:                        { type: sequelize.STRING(255), allowsNulls: false },
         city:                           { type: sequelize.STRING(100), allowsNulls: false },
@@ -41,7 +41,8 @@ class Dealer {
       }, {
         timestamps: true,
         createdAt: 'created',
-        updatedAt: 'lastUpdate'
+        updatedAt: 'lastUpdated',
+        freezeTableName: true
       }
     );
   }

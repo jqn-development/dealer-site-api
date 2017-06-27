@@ -14,7 +14,7 @@ class Lead {
     this.logger = logger;
 
     this.model = dbconn.conn.define('lead', {
-        leadID:           { type: sequelize.CHAR(36), allowsNulls: false, validate: { isUUID: 4 } },
+        leadID:           { type: sequelize.CHAR(36), allowsNulls: false, validate: { isUUID: 4 }, primaryKey: true },
         oldLeadID:        { type: sequelize.INTEGER(11), allowsNulls: true, defaultValue: null },
         customerID:       { type: sequelize.CHAR(36), allowsNulls: false, validate: { isUUID: 4 } },
         dealerID:         { type: sequelize.INTEGER(11), allowsNulls: true, defaultValue: null },
@@ -33,7 +33,8 @@ class Lead {
       }, {
         timestamps: true,
         createdAt: 'created',
-        updatedAt: 'lastUpdate'
+        updatedAt: 'lastUpdated',
+        freezeTableName: true
       }
     );
   }

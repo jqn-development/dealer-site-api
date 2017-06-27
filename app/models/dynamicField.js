@@ -14,7 +14,7 @@ class DynamicField {
     this.logger = logger;
 
     this.model = dbconn.conn.define('dynamicField', {
-        dynamicFieldID:   { type: sequelize.CHAR(36), allowsNulls: false, validate: { isUUID: 4 } },
+        dynamicFieldID:   { type: sequelize.CHAR(36), allowsNulls: false, validate: { isUUID: 4 }, primaryKey: true },
         oldFieldID:       { type: sequelize.INTEGER(11), allowsNulls: true, defaultValue: null },
         dealerID:         { type: sequelize.INTEGER(11), allowsNulls: false },
         fieldLabel:       { type: sequelize.STRING(100), allowsNulls: false },
@@ -23,7 +23,8 @@ class DynamicField {
       }, {
         timestamps: true,
         createdAt: 'created',
-        updatedAt: 'lastUpdate'
+        updatedAt: 'lastUpdated',
+        freezeTableName: true
       }
     );
   }

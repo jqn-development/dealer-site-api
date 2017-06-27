@@ -14,7 +14,7 @@ class SiteConfig {
     this.logger = logger;
 
     this.model = dbconn.conn.define('siteConfig', {
-        dealerID:               { type: sequelize.INTEGER(11), allowsNulls: false },
+        dealerID:               { type: sequelize.INTEGER(11), allowsNulls: false, primaryKey: true },
         siteID:                 { type: sequelize.CHAR(36), allowsNulls: false, validate: { isUUID: 4 } },
         secretKey:              { type: sequelize.STRING(48), allowsNulls: false },
         baseDomainURL:          { type: sequelize.STRING(255), allowsNulls: false },
@@ -26,11 +26,12 @@ class SiteConfig {
         priceLabelInternetNew:  { type: sequelize.STRING(100), allowsNulls: true },
         priceLabelInternetUsed: { type: sequelize.STRING(100), allowsNulls: true },
         bookLabel:              { type: sequelize.STRING(100), allowsNulls: true },
-        supressStockPhotos:     { type: sequelize.BOOLEAN, allowsNulls: false, defaultValue: 0 }  
+        supressStockPhotos:     { type: sequelize.BOOLEAN, allowsNulls: false, defaultValue: 0 }
       }, {
         timestamps: true,
         createdAt: 'created',
-        updatedAt: 'lastUpdate'
+        updatedAt: 'lastUpdated',
+        freezeTableName: true
       }
     );
   }
