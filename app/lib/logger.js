@@ -1,19 +1,18 @@
 // Dependencies
 const
-  _                 = require('lodash'),
-  fs                = require('fs'),
-  moment            = require('moment'),
-  winston           = require('winston'),
+  _                 = require('lodash')
+  , fs                = require('fs')
+  , moment            = require('moment')
+  , winston           = require('winston')
 
-  aws               = require('aws-sdk'),
-  winstonCloudWatch = require('winston-cloudwatch')
+  , aws               = require('aws-sdk')
+  , winstonCloudWatch = require('winston-cloudwatch')
 ;
 
 class Logger {
   constructor(config) {
-    this.logDir = config.server.logDir || './logs';
-
-    this.log = new (winston.Logger) ({
+    this.logDir = config.logging.logDir || './logs';
+    this.options = {
       exitOnError: false,
       formatter: this.formatter,
       transports: [
@@ -39,7 +38,10 @@ class Logger {
           formatter: this.formatter
         })
       ]
-    });
+    };
+    // Merge options from config into this object
+    this.option = _.assign(this.options, config.logging.options);
+    this.log = new (winston.Logger) (this.options);
   }
 
   formatter(options) {
