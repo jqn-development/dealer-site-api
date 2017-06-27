@@ -2,3 +2,5 @@
 node_modules
 logs/*
 aws.credentials.json
+mysql.credentials.json
+*.bak
