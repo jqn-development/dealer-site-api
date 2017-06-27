@@ -4,6 +4,22 @@ module.exports = {
   },
   'logging': { // Logging Configuration
     'logDir': './logs',
+    'options': {
+        'json': false,
+        'maxsize': '10000000',
+        'maxFiles': '10',
+        'level': 'silly'
+    }
   },
-  'credentials': __dirname + '/config/aws.credentials.json'
+  'credentials': {
+    'aws': require(__dirname + '/aws.credentials.json'),
+    'mysql': require(__dirname + '/mysql.credentials.json')
+  },
+  'db': {
+    'pool': {
+      'max': 30,
+      'min': 1,
+      'idle': 10000
+    }
+  }
 }
