@@ -4,12 +4,10 @@ const
   _                 = require('lodash')
   , fs                = require('fs')
   , path              = require('path')
-  , moment            = require('moment')
-  , sequelize         = require('sequelize')
-  , winston           = require('winston')
 ;
 
 let model = {};
+
 /*
  * This iterates through all .js files in the routes folder and loads them in
  * to the `model`` object. The purpose of this is to separate each of
@@ -19,7 +17,7 @@ let model = {};
  * inside the host code.
  */
 
-function loadModels(log) {
+module.exports = (log) => {
   log.info("Loading data models...");
   fs.readdirSync(__dirname)
     .filter(function(file) {
@@ -32,5 +30,3 @@ function loadModels(log) {
     });
   return model;
 }
-
-module.exports = loadModels;

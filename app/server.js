@@ -16,12 +16,11 @@ const
 
   , Logger            = require('./lib/logger')
   , DBConn            = require('./lib/dbConn')
-  , errInfo           = require('./lib/errInfo')
+  , respCodes         = require('./lib/respCodes')
 
   , config            = require('../config/config')
 ;
 
-let Models = {};
 let server = {};
 
 /* ****************************************************************************
@@ -36,6 +35,8 @@ class Server {
     this.router = {};
     this.log = {};
     this.dbconn = {};
+    this.models = {};
+    this.controllers = {};
   }
 
   /* ****************************************************************************
@@ -72,23 +73,42 @@ class Server {
   /* ****************************************************************************
    *  Middleware functions
    * ***************************************************************************/
-   sendError(err, req, res) {
-     let code = req.errorCode || 500001;
-     let error = errInfo[code];
-     let errorBlock = {
-       errorStatus: error.status,
-       errorCode: code,
-       errorMsg: error.message,
-       callID: req.callID
-     };
-     if (_.hasValue(err)) errorBlock.error = JSON.stringify(err);
-     res.status(error.status);
-     res.send(errorBlock);
-   }
+  sendError(err, req, res) {
+    let code = req.respCode || 500001;
+    let error = respCodes[code];
+    let errorBlock = {
+      summary: error.summary,
+      message: error.message,
+    };
+    if (_.hasValue(err)) errorBlock.details = JSON.stringify(err);
+    req.error = errorBlock;
+    req.respCode = code;
+    this.sendResponse(req,res);
+  }
+
+  sendResponse(req, res) {
+    let code = req.respCode || 200000;
+    let respInfo = respCodes[code];
+    let respBlock = {
+      respCode: code,
+      status: respInfo.status,
+      callID: req.callID,
+      time: req.time,
+      timestamp: req.timestamp
+    };
+    if (_.hasValue(req.data)) respBlock.data = req.data;
+    if (_.hasValue(req.error)) respBlock.error = req.error;
+
+    res.status(respInfo.status);
+    res.send(respBlock);
+  }
 
   attachCallID(req, res, next) {
     // Generate CallID attach to the request object
     req.callID = uuidv4();
+    req.time = moment().format() + "Z";
+    req.timestamp = moment().format('x');
+    req.hasData = false;
     next();
   }
 
@@ -112,17 +132,21 @@ class Server {
   }
 
   errorHandler(err, req, res, next) {
-    if (_.isUnset(req.errorCode) ) req.errorCode = 500001;
+    if ( _.isUnset(req.respCode) ) req.respCode = 500001;
     this.sendError(err, req, res);
   }
 
-  handle404Error(req, res, next) {
-    req.errorCode = 404000;
-    this.sendError(null, req, res);
+  responseHandler(req, res, next) {
+    if ((req.hasData === true) && (_.hasValue(req.data))) {
+      this.sendResponse(req, res);
+    } else {
+      next();
+    }
   }
 
-  sendStatus(req, res) {
-
+  handle404Error(req, res, next) {
+    req.respCode = 404000;
+    this.sendError(null, req, res);
   }
 
   /* ****************************************************************************
@@ -153,7 +177,7 @@ class Server {
   }
 
   setupServer(app) {
-    this.log.info('Starting server.');
+    this.log.info('Starting server');
 
     // configure app to use bodyParser()
     // this will let us get the data from a POST
@@ -163,22 +187,31 @@ class Server {
     // Create the router and routes for the API
     this.router = express.Router();
 
-    // Load Models
-    Models = require('./models')(this.log);          // load models
+    // Load models
+    this.models = require('./models')(this.log);
 
-    // middleware to use for all requests
-    // The 'bind' statements are there to preserve the context
+    // Load controllers
+    this.controllers = require('./controllers')(this.log);
+
+    // bind middleware to use for all requests
+    // The 'bind' statements are there to preserve the scope of this class
     app.use(this.attachCallID.bind(this));
     app.use(this.authenticateRequest.bind(this));
     app.use(this.logRequest.bind(this));
     app.use(this.logErrors.bind(this));
     app.use(this.clientErrorHandler.bind(this));
-    //app.use(this.errorHandler);
+    app.use(this.errorHandler.bind(this));
 
-    app.use('/site', this.router);   // Setup the base server application
+    // Setup the base server application namespace '/site'
+    app.use('/site', this.router);
 
-    require('./routes')(this.router, this.dbconn, Models, this.log);   // load routes
+    // Load routes
+    require('./routes')(this.router, this.dbconn, this.models, this.log);
 
+    // middleware for general handling of route responses
+    app.use(this.responseHandler.bind(this));
+
+    // middleware for no route (404) error
     app.use(this.handle404Error.bind(this));
 
     // Start the server

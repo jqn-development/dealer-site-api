@@ -4,9 +4,6 @@ const
   _                 = require('../lib/lodashExt')
   , fs                = require('fs')
   , path              = require('path')
-  , moment            = require('moment')
-  , sequelize         = require('sequelize')
-  , winston           = require('winston')
 ;
 
 /*
@@ -18,6 +15,7 @@ const
  * The `app` is passed in through a paired `require('thisLib')(app)` statement
  * inside the host code.
  */
+// FIXME: We should not be passing the database connection to the routes, the controllers should be handling the database logic and then passing the data back
 function loadRoutes(app, dbconn, models, log) {
   log.info("Loading Routes...");
   fs.readdirSync(__dirname)

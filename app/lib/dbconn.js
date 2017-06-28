@@ -27,6 +27,7 @@ class DBConn {
   }
 
   connect() {
+    this.log.info('Testing connection...');
     this.conn.authenticate()
       .then(() => {
         this.log.info('Connection has been established successfully.');
