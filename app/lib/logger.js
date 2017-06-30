@@ -1,3 +1,5 @@
+// app/lib/logger.js
+
 // Dependencies
 const
   _                 = require('./lodashExt')

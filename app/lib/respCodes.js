@@ -11,6 +11,21 @@ let codes = {
     'message': 'The request is malformed.',
     'status': 400,
   },
+  [400001]: {
+    'summary': 'Data Validation Mismatch',
+    'message': 'The validation parameters for this request are invalid for the data requested.',
+    'status': 400,
+  },
+  [400002]: {
+    'summary': 'Non-Existant Record',
+    'message': 'The record requested does not exist.',
+    'status': 400,
+  },
+  [400003]: {
+    'summary': 'Missing Parameters',
+    'message': 'The request is missing required parameters.',
+    'status': 400,
+  },
   [401000]: {
     'summary': 'Unauthorized',
     'message': 'The credentials provided are unknown.',

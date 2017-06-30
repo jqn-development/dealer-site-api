@@ -15,8 +15,8 @@ const
  * The `app` is passed in through a paired `require('thisLib')(app)` statement
  * inside the host code.
  */
-// FIXME: We should not be passing the database connection to the routes, the controllers should be handling the database logic and then passing the data back
-function loadRoutes(app, dbconn, models, log) {
+
+function loadRoutes(app, controllers, log) {
   log.info("Loading Routes...");
   fs.readdirSync(__dirname)
     .filter(function(file) {
@@ -25,7 +25,7 @@ function loadRoutes(app, dbconn, models, log) {
     .forEach(function(file) {
       let name = file.substr(0, file.indexOf('.'));
       log.info(`Loading Route: '${name}'`);
-      require(path.join(__dirname, file))(app, dbconn, models, log);
+      require(path.join(__dirname, file))(app, controllers, log);
     });
 }
 

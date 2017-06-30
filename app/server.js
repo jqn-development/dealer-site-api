@@ -83,7 +83,8 @@ class Server {
       summary: error.summary,
       message: error.message,
     };
-    if (_.hasValue(err)) errorBlock.details = JSON.stringify(err);
+    if (_.hasValue(err)) errorBlock.details = err;
+    req.hasError = true;
     req.error = errorBlock;
     req.respCode = code;
     this.sendResponse(req,res);
@@ -100,6 +101,7 @@ class Server {
       timestamp: req.timestamp
     };
     if (_.hasValue(req.data)) respBlock.data = req.data;
+    if (_.hasValue(req.count)) respBlock.count = req.count;
     if (_.hasValue(req.error)) respBlock.error = req.error;
 
     res.status(respInfo.status);
@@ -196,7 +198,7 @@ class Server {
     this.models = require('./models')(this.log);
 
     // Load controllers
-    this.controllers = require('./controllers')(this.log);
+    this.controllers = require('./controllers')(this.dbconn, this.models, this.log);
 
     // bind middleware to use for all requests
     // The 'bind' statements are there to preserve the scope of this class
@@ -207,7 +209,7 @@ class Server {
     app.use('/site', this.router);
 
     // Load routes
-    require('./routes')(this.router, this.dbconn, this.models, this.log);
+    require('./routes')(this.router, this.controllers, this.log);
 
     // middleware for general handling of route responses
     app.use(this.logErrors.bind(this));

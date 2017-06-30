@@ -9,7 +9,7 @@ const
   , winston           = require('winston')
 ;
 
-module.exports = function(app, dbconn, models, log) {
+module.exports = function(app, controllers, log) {
   // Dealer Info READ
   app.get('/dealer/:dealerID', function(req, res, next) {
     let dealer = new models.Dealer(dbconn, log);
