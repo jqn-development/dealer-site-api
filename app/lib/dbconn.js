@@ -36,6 +36,11 @@ class DBConn {
         this.log.error('Unable to connect to the database:', err);
       });
   }
+
+  close() {
+    // Close the connection to the database
+    this.conn.close();
+  }
 }
 
 module.exports = DBConn;

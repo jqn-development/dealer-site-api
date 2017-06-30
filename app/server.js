@@ -23,9 +23,9 @@ const
 
 let server = {};
 
-/* ****************************************************************************
- *  Server Class
- * ***************************************************************************/
+// ****************************************************************************
+//  Server Class
+// ***************************************************************************/
 class Server {
   constructor(config) {
     this.app = express();  // Setup Express
@@ -39,9 +39,9 @@ class Server {
     this.controllers = {};
   }
 
-  /* ****************************************************************************
-   *  Server Shutdown Logic
-   * ***************************************************************************/
+  // ****************************************************************************
+  //  Server Shutdown Logic
+  // ***************************************************************************/
   handleSIGTERM() {
    this.close(15);
   }
@@ -64,15 +64,18 @@ class Server {
         sigCode = code;
         break;
     }
+
+    // Perform gracful shutdown here
     this.log.info(`Received exit code ${sigCode}, performing graceful shutdown`);
-    // TODO: Perform gracful shutdown here
-    if (_.hasValue(server)) this.server.close();
+    if (_.hasValue(this.dbconn)) this.dbconn.close();     // Close DB Connection
+    if (_.hasValue(this.server)) this.server.close();     // Close HTTP Server
+
     process.exit(code);
   }
 
-  /* ****************************************************************************
-   *  Middleware functions
-   * ***************************************************************************/
+  // ****************************************************************************
+  //  Middleware functions
+  // ***************************************************************************/
   sendError(err, req, res) {
     let code = req.respCode || 500001;
     let error = respCodes[code];
@@ -114,29 +117,31 @@ class Server {
 
   authenticateRequest(req, res, next) {
     // TODO: Parse the security information from the request and make sure the SecKey and siteID
+    this.log.debug("Authenticating Request");
+
     next();
   }
 
   logRequest(req, res, next) {
-    // TODO: Parse the full request, make JSON object, and then log it
-    this.log.info(`Received Request -- ${req.callID}`);
+    // TODO: Parse the full request, make JSON object, and then log it -- req.headers, req.body, req.params
+    this.log.debug(`Received Request -- ${req.callID}`);
     next();
   }
 
   logErrors(err, req, res, next) {
-    next(err);
-  }
-
-  clientErrorHandler(err, req, res, next) {
+    this.log.debug("Logging Errors");
+    this.log.error(err);
     next(err);
   }
 
   errorHandler(err, req, res, next) {
+    this.log.debug("Error Handler");
     if ( _.isUnset(req.respCode) ) req.respCode = 500001;
     this.sendError(err, req, res);
   }
 
   responseHandler(req, res, next) {
+    this.log.debug("Response Handler");
     if ((req.hasData === true) && (_.hasValue(req.data))) {
       this.sendResponse(req, res);
     } else {
@@ -149,9 +154,9 @@ class Server {
     this.sendError(null, req, res);
   }
 
-  /* ****************************************************************************
-   *  Server Initialization Logic
-   * ***************************************************************************/
+  // ****************************************************************************
+  // Server Initialization Logic
+  // ***************************************************************************/
   init() {
     // Setup graceful exit for SIGTERM and SIGINT
     process.on('SIGTERM', this.handleSIGTERM.bind(this));
@@ -165,7 +170,7 @@ class Server {
   setupLogging() {
     // Create log folder if it does not already exist
     if (!fs.existsSync(config.logging.logDir)) {
-      console.log('Creating log folder')
+      console.log('Creating log folder');
       fs.mkdirSync(config.logging.logDir);
     }
     this.log = new Logger(config).log;
@@ -197,10 +202,6 @@ class Server {
     // The 'bind' statements are there to preserve the scope of this class
     app.use(this.attachCallID.bind(this));
     app.use(this.authenticateRequest.bind(this));
-    app.use(this.logRequest.bind(this));
-    app.use(this.logErrors.bind(this));
-    app.use(this.clientErrorHandler.bind(this));
-    app.use(this.errorHandler.bind(this));
 
     // Setup the base server application namespace '/site'
     app.use('/site', this.router);
@@ -209,7 +210,10 @@ class Server {
     require('./routes')(this.router, this.dbconn, this.models, this.log);
 
     // middleware for general handling of route responses
+    app.use(this.logErrors.bind(this));
+    app.use(this.errorHandler.bind(this));
     app.use(this.responseHandler.bind(this));
+    app.use(this.logRequest.bind(this));
 
     // middleware for no route (404) error
     app.use(this.handle404Error.bind(this));
