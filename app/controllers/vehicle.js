@@ -29,8 +29,8 @@ class VehicleController {
     if (!reqCheck(req)) {
       // Get the vehicle ID from the params or form body
       // Or the dealerID from the authenticated request
-      let vehicleID = req.headers.vehicleid || req.body.vehicleID || req.params.vehicleID;
-      let dealerID = req.headers.dealerid || req.body.dealerID || req.dealerID;
+      let vehicleID = req.params.vehicleID ||  req.body.vehicleID || req.headers.vehicleid || req.query.vehicleID;
+      let dealerID = req.body.dealerID || req.headers.dealerid || req.query.dealerID || req.dealerID;
 
       // Check Required parameters
       let reqParams = [];
