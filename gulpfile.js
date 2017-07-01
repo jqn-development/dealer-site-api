@@ -6,14 +6,16 @@ const
   , plumber     = require('gulp-plumber')       // Handle Errors without breaking
   , eslint      = require('gulp-eslint')        // ES6 JS/JSX Lineter -- Check for syntax errors
   , mocha       = require('gulp-mocha')         // Test Framework
+  , esdoc       = require('gulp-esdoc')         // Documentation Generation
   , config      = require('./build.config')
 ;
 
 const devFolder         = config.devFolder;
 const configFolder      = config.configFolder;
+const docsFolder        = config.docsFolder;
 
 // Route Errors to the Notificication Tray
-let onError = function(err) {
+let onError = (err) => {
   notify.onError({
     title:    "Error",
     message:  "<%= error %>",
@@ -25,7 +27,7 @@ let plumberOptions = {
   errorHandler: onError,
 };
 
-gulp.task('copyConfig', function() {
+gulp.task('copyConfig', () => {
   if (!fs.existsSync(configFolder + '/aws.credentials.json')) {
     gulp.src(configFolder + '/example.aws.credentials.json')
       .pipe(rename('aws.credentials.json'))
@@ -40,14 +42,14 @@ gulp.task('copyConfig', function() {
 });
 
 // Lint JS/JSX Files (For Express)
-gulp.task('lint', ['copyConfig'], function() {
+gulp.task('lint', ['copyConfig'], () => {
   return gulp.src(devFolder + '/**/*.js')
     .pipe(eslint({ configFile: 'eslint.json'}))
     .pipe(eslint.format())
     .pipe(eslint.failAfterError());
 });
 
-gulp.task('test', ['lint'], function() {
+gulp.task('test', ['lint'], () => {
   return gulp.src('test.js', {read: false})
     .pipe(mocha())
     .once('error', function() {
@@ -55,4 +57,11 @@ gulp.task('test', ['lint'], function() {
     })
 });
 
-gulp.task('default', ['test']);
+gulp.task('docs', ['test'], () => {
+  return gulp.src('./' + devFolder)
+    .pipe(esdoc({
+      destination: docsFolder
+    }));
+});
+
+gulp.task('default', ['docs']);

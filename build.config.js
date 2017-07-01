@@ -1,5 +1,6 @@
 module.exports = {
   'main': 'app/server.js',
   'devFolder': 'app/',
-  'configFolder': 'config/'
+  'configFolder': 'config/',
+  'docsFolder': 'docs/'
 };
