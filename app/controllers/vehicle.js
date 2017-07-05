@@ -88,9 +88,9 @@ class VehicleController {
       let offset;
 
       // Set Defaults
-      page = (page < 1) ? 1 : (page || 1);        // Default to the first page and remove values under 1
-      limit = (limit < 1) ? 1 : (limit || 100);   // Default to a limit of 100 rows
-      offset = limit * (page - 1);                // Calculate the offset
+      page = Number((page < 1) ? 1 : (page || 1));        // Default to the first page and remove values under 1
+      limit = Number((limit < 1) ? 1 : (limit || 100));   // Default to a limit of 100 rows
+      offset = limit * (page - 1);                        // Calculate the offset
 
       // Check Required parameters
       let reqParams = [];
@@ -110,9 +110,10 @@ class VehicleController {
           dealerID: dealerID
         },
         order: [['listingDate','DESC']],  // This MUST be a nested array
+        offset: 0,
         limit: limit
       }
-      if (_.hasValue(page)) options.offest = offset;
+      if (page > 1) options.offset = offset;
       try {
         this.model.findAll(options)
         .then((vehicles) => {
