@@ -17,7 +17,7 @@ class SiteController {
    */
   constructor(dbconn, models, log) {
     this.log = log;
-    this.model = new models.Vehicle(dbconn, log).model;
+    this.model = new models.Site(dbconn, log).model;
   }
 
   read(req, res, next) {
