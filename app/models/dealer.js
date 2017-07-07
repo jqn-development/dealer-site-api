@@ -24,7 +24,6 @@ class Dealer {
         phoneExt:                       { type: sequelize.STRING(20), allowsNulls: true },
         phoneCountryCode:               { type: sequelize.STRING(4), allowsNulls: false, defaultValue: 1 },
         fax:                            { type: sequelize.STRING(15), allowsNulls: true },
-        faxExt:                         { type: sequelize.STRING(20), allowsNulls: true },
         faxCountryCode:                 { type: sequelize.STRING(4), allowsNulls: false, defaultValue: 1 },
         email:                          { type: sequelize.STRING(255), allowsNulls: true },
         websitePhone:                   { type: sequelize.STRING(15), allowsNulls: true },
