@@ -15,18 +15,18 @@ module.exports = function(app, controllers, log) {
   app.post('/admin/createAPIKey', controllers.AdminController.createAPIKey.bind(controllers.AdminController));
 
   // admin Create Site
-  //app.post('/admin/createSite', controllers.AdminController.createAPIKey.bind(controllers.AdminController));
-  //app.post('/admin/createSite/:dealerID', controllers.AdminController.createAPIKey.bind(controllers.AdminController));
+  app.post('/admin/createSite', controllers.StubControler.action.bind(controllers.StubControler));
+  app.post('/admin/createSite/:dealerID', controllers.StubControler.action.bind(controllers.StubControler));
 
   // admin Delete Site
-  //app.post('/admin/deleteSite', controllers.AdminController.createAPIKey.bind(controllers.AdminController));
-  //app.post('/admin/deleteSite/:dealerID', controllers.AdminController.createAPIKey.bind(controllers.AdminController));
+  app.post('/admin/deleteSite', controllers.StubControler.action.bind(controllers.StubControler));
+  app.post('/admin/deleteSite/:dealerID', controllers.StubControler.action.bind(controllers.StubControler));
 
   // admin flush cache
-  //app.post('/admin/flushCache', controllers.AdminController.createAPIKey.bind(controllers.AdminController));
+  app.post('/admin/flushCache', controllers.StubControler.action.bind(controllers.StubControler));
 
   // admin Permissions assignment
-  //app.post('/admin/grantSitePermissions', controllers.AdminController.createAPIKey.bind(controllers.AdminController));
-  //app.post('/admin/revokeSitePermissions', controllers.AdminController.createAPIKey.bind(controllers.AdminController));
+  app.post('/admin/grantSitePermissions', controllers.StubControler.action.bind(controllers.StubControler));
+  app.post('/admin/revokeSitePermissions', controllers.StubControler.action.bind(controllers.StubControler));
 
 }
