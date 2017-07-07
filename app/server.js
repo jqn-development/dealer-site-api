@@ -33,6 +33,7 @@ class Server {
     this.config = config;
     this.port = config.server.port || 8080;  // Configure the port number
     this.router = {};
+    this.logger = {};
     this.log = {};
     this.dbconn = {};
     this.models = {};
@@ -117,12 +118,12 @@ class Server {
     next();
   }
 
-  authenticateRequest(req, res, next) {
-    // TODO: Parse the security information from the request and make sure the SecKey and siteID
-    this.log.debug("Authenticating Request");
-
-    next();
-  }
+  // authenticateRequest(req, res, next) {
+  //   // TODO: Parse the security information from the request and make sure the SecKey and siteID
+  //   this.log.debug("Authenticating Request");
+  //
+  //   next();
+  // }
 
   logRequest(req, res, next) {
     // TODO: Parse the full request, make JSON object, and then log it -- req.headers, req.body, req.params
@@ -175,7 +176,8 @@ class Server {
       console.log('Creating log folder');
       fs.mkdirSync(config.logging.logDir);
     }
-    this.log = new Logger(config).log;
+    this.logger = new Logger(config);
+    this.log = this.logger.log;
   }
 
   setupDBConnection() {
@@ -203,7 +205,7 @@ class Server {
     // bind middleware to use for all requests
     // The 'bind' statements are there to preserve the scope of this class
     app.use(this.attachCallID.bind(this));
-    app.use(this.authenticateRequest.bind(this));
+    app.use(this.controllers.AuthController.authenticateRequest.bind(this.controllers.AuthController));
 
     // Setup the base server application namespace '/site'
     app.use('/site', this.router);
