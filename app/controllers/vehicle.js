@@ -2,12 +2,7 @@
 
 const
   _                   = require('../lib/lodashExt')
-  , fs                = require('fs')
-  , path              = require('path')
-  , moment            = require('moment')
-  , sequelize         = require('sequelize')
-  , winston           = require('winston')
-  , reqCheck          = require('../lib/reqCheck')
+  , ReqUtils          = require('../lib/reqUtils')
 ;
 
 /**
@@ -26,21 +21,19 @@ class VehicleController {
   }
 
   read(req, res, next) {
-    if (!reqCheck(req)) {
+    let reqUtils = new ReqUtils(req);
+
+    if (!reqUtils.hasResponse()) {
       // Get the vehicle ID from the params or form body
       // Or the dealerID from the authenticated request
       let vehicleID = req.params.vehicleID ||  req.body.vehicleID || req.headers.vehicleid || req.query.vehicleID;
       let dealerID = req.body.dealerID || req.headers.dealerid || req.query.dealerID || req.dealerID;
 
       // Check Required parameters
-      let reqParams = [];
-      // Missing parameters
-      if (_.isUnset(vehicleID)) reqParams.push('vehicleID');
-      if (_.isUnset(dealerID)) reqParams.push('dealerID');
+      let reqParams = reqUtils.hasRequiredParams({ vehicleID: vehicleID, dealerID: dealerID });
       if (reqParams.length > 0) {
         // We have missing parameters, report the error
-        req.hasError = true;
-        req.respCode = 400003;
+        reqUtils.setError(400003);
         // Return an error below
         next(`Required parameters [${reqParams}] are missing from this request.`);
         return;
@@ -50,8 +43,7 @@ class VehicleController {
         this.model.findById(vehicleID)
         .then((vehicle) => {
           if (!vehicle) {
-            req.hasError = true;
-            req.respCode = 400002;
+            reqUtils.setError(400002);
             next(`The 'vehicleID': '${vehicleID}' does not exist.`);
           } else {
             // Check that the dealerID passed matches the dealerID of the vehicle
@@ -61,21 +53,18 @@ class VehicleController {
               req.data = vehicle;
               next()
             } else {
-              req.hasError = true;
-              req.respCode = 400001;
+              reqUtils.setError(400001);
               // Return an error below
               next('The \'dealerID\' passed is invalid for this vehicle.');
             }
           }
         })
         .catch((err) => {
-          req.hasError = true;
-          req.respCode = 500001;
+          reqUtils.setError(500001);
           next(err);
         });
       } catch (err) {
-        req.hasError = true;
-        req.respCode = 500000;
+        reqUtils.setError(500001);
         next(err);
       }
     } else {
@@ -84,8 +73,9 @@ class VehicleController {
   }
 
   list(req, res, next) {
-    if (!reqCheck(req)) {
-      // Get the dealer ID from the params or form body
+    let reqUtils = new ReqUtils(req);
+
+    if (!reqUtils.hasResponse()) {      // Get the dealer ID from the params or form body
       // Or the dealerID from the authenticated request
       let page = req.params.page || req.body.page || req.headers.page || req.query.page;
       let limit = req.params.limit || req.body.limit || req.headers.limit || req.query.limit;
@@ -98,13 +88,10 @@ class VehicleController {
       offset = limit * (page - 1);                        // Calculate the offset
 
       // Check Required parameters
-      let reqParams = [];
-      // Missing parameters
-      if (_.isUnset(dealerID)) reqParams.push('dealerID');
+      let reqParams = reqUtils.hasRequiredParams({ dealerID: dealerID });
       if (reqParams.length > 0) {
         // We have missing parameters, report the error
-        req.hasError = true;
-        req.respCode = 400003;
+        reqUtils.setError(400003);
         // Return an error below
         next(`Required parameters [${reqParams}] are missing from this request.`);
         return;
@@ -122,9 +109,8 @@ class VehicleController {
       try {
         this.model.findAll(options)
         .then((vehicles) => {
-          req.hasData = true;
           if (!vehicles) {
-            req.data = {};
+            reqUtils.setData({});
             req.count = 0;
           }
           else {
@@ -134,13 +120,11 @@ class VehicleController {
           next();
         })
         .catch((err) => {
-          req.hasError = true;
-          req.respCode = 500001;
+          reqUtils.setError(500001);
           next(err);
         });
       } catch(err) {
-        req.hasError = true;
-        req.respCode = 500001;
+        reqUtils.setError(500001);
         next(err);
       }
     } else {

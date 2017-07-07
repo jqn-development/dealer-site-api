@@ -2,9 +2,9 @@
 
 const
   _                   = require('../lib/lodashExt')
-  , reqCheck          = require('../lib/reqCheck')
   , uuidAPIKey        = require('uuid-apikey')
   , secretKey         = require('secret-key')
+  , ReqUtils          = require('../lib/reqUtils')
 ;
 
 /**
@@ -23,18 +23,17 @@ class AdminController {
   }
 
   createAPIKey(req, res, next) {
-    if (!reqCheck(req)) {
+    let reqUtils = new ReqUtils(req);
+
+    if (!reqUtils.hasResponse()) {
       // TODO: Context and Auth Check
       // Get Parameters
 
       // Check Required parameters
-      let reqParams = [];
-      // Missing parameters
-      //if (_.isUnset(dealerID)) reqParams.push('dealerID');
+      let reqParams = reqUtils.hasRequiredParams({});
       if (reqParams.length > 0) {
         // We have missing parameters, report the error
-        req.hasError = true;
-        req.respCode = 400003;
+        reqUtils.setError(400003);
         // Return an error below
         next(`Required parameters [${reqParams}] are missing from this request.`);
         return;
@@ -55,25 +54,21 @@ class AdminController {
         this.model.create(obj)
         .then((acl) => {
           if (!acl) {
-            req.hasError = true;
-            req.respCode = 500002;
+            reqUtils.setError(500002);
             next(`The new API Key could not be created.`);
           } else {
-            req.hasData = true;
             acl.id = acl.apiKey;
             acl.apiKey = uuidAPIKey.toAPIKey(acl.id);
-            req.data = _.pick(acl, ['id', 'apiKey', 'secretKey', 'lastUpdated', 'created']);
+            reqUtils.setData(_.pick(acl, ['id', 'apiKey', 'secretKey', 'lastUpdated', 'created']));
             next();
           }
         })
         .catch((err) => {
-          req.hasError = true;
-          req.respCode = 500002;
+          reqUtils.setError(500002);
           next(err);
         });
       } catch (err) {
-        req.hasError = true;
-        req.respCode = 500001;
+        reqUtils.setError(500001);
         next(err);
       }
     } else {
@@ -81,6 +76,9 @@ class AdminController {
     }
   }
 
+  createSite(req, res, next) {
+
+  }
 
 }
 

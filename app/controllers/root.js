@@ -2,9 +2,7 @@
 
 const
   _                   = require('../lib/lodashExt')
-  , fs                = require('fs')
-  , path              = require('path')
-  , reqCheck          = require('../lib/reqCheck')
+  , ReqUtils          = require('../lib/reqUtils')
 ;
 
 /**
@@ -22,7 +20,9 @@ class RootController {
   }
 
   handleRoot(req, res, next) {
-    if (!reqCheck(req)) {
+    let reqUtils = new ReqUtils(req);
+
+    if (!reqUtils.hasResponse()) {
       req.hasData = true;
       req.data = {
         message: 'It works!'

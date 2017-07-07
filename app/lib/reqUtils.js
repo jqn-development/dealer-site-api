@@ -4,7 +4,6 @@ const
   _                   = require('./lodashExt')
 ;
 
-// TODO: Refactor all controllers to use this class instead of reqCheck
 // This class exists to move repeated functionality out of controllers to reduce
 // repeated code
 class ReqUtils {

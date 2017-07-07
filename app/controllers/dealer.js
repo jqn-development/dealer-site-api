@@ -2,9 +2,7 @@
 
 const
   _                   = require('../lib/lodashExt')
-  , fs                = require('fs')
-  , path              = require('path')
-  , reqCheck          = require('../lib/reqCheck')
+  , ReqUtils          = require('../lib/reqUtils')
 ;
 
 /**
@@ -23,7 +21,51 @@ class DealerController {
   }
 
   read(req, res, next) {
-    if (!reqCheck(req)) {
+    let reqUtils = new ReqUtils(req);
+
+    if (!reqUtils.hasResponse()) {
+      // Get the dealer ID from the params, form body, headers, query string, or session.
+      let dealerID = req.params.dealerID || req.body.dealerID || req.headers.dealerid || req.query.dealerID || req.dealerID;
+
+      // Check Required parameters
+      let reqParams = reqUtils.hasRequiredParams({dealerID: dealerID});
+      if (reqParams.length > 0) {
+        // We have missing parameters, report the error
+        reqUtils.setError(400003);
+        // Return an error below
+        next(`Required parameters [${reqParams}] are missing from this request.`);
+        return;
+      }
+
+      // TODO: Do validation on params (SQL Injection)
+      try {
+        this.model.findById(dealerID)
+        .then((dealer) => {
+          if (!dealer) {
+            reqUtils.setError(400002);
+            next(`The 'dealerID': '${dealerID}' does not exist.`);
+          } else {
+            reqUtils.setData(dealer);
+            next();
+          }
+        })
+        .catch((err) => {
+          reqUtils.setError(500001);
+          next(err);
+        });
+      } catch (err) {
+        reqUtils.setError(500001);
+        next(err);
+      }
+    } else {
+      next();
+    }
+  }
+
+  update(req, res, next) {
+    let reqUtils = new ReqUtils(req);
+
+    if (!reqUtils.hasResponse()) {
       // Get the dealer ID from the params, form body, headers, query string, or session.
       let dealerID = req.params.dealerID || req.body.dealerID || req.headers.dealerid || req.query.dealerID || req.dealerID;
 
@@ -67,10 +109,6 @@ class DealerController {
     } else {
       next();
     }
-  }
-
-  update(req, res, next) {
-    next();
   }
 
 }

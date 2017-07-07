@@ -2,12 +2,7 @@
 
 const
   _                   = require('../lib/lodashExt')
-  , fs                = require('fs')
-  , path              = require('path')
-  , moment            = require('moment')
-  , sequelize         = require('sequelize')
-  , winston           = require('winston')
-  , reqCheck          = require('../lib/reqCheck')
+  , ReqUtils          = require('../lib/reqUtils')
 ;
 
 /**
