@@ -49,8 +49,8 @@ class VehicleController {
             // Check that the dealerID passed matches the dealerID of the vehicle
             // Return an 'unauthorized' error if it doesn't match
             if (vehicle.dealerID == dealerID) {
-              req.hasData = true;
-              req.data = vehicle;
+              vehicle.images = JSON.parse(vehicle.images);
+              reqUtils.setData(vehicle);
               next()
             } else {
               reqUtils.setError(400001);
@@ -114,7 +114,9 @@ class VehicleController {
             req.count = 0;
           }
           else {
-            req.data = vehicles;
+            reqUtils.setData(_.forEach(vehicles, (value) => {
+              value.images = JSON.parse(value.images);
+            }));
             req.count = vehicles.length;
           }
           next();
