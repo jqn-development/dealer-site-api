@@ -8,15 +8,14 @@ const
   , logger            = require('../lib/logger')
 ;
 
-class SiteConfig {
+class Site {
   constructor(dbconn, logger) {
     this.dbconn = dbconn;
     this.logger = logger;
 
-    this.model = dbconn.conn.define('siteConfig', {
-        dealerID:               { type: sequelize.INTEGER(11), allowsNulls: false, primaryKey: true },
-        siteID:                 { type: sequelize.CHAR(36), allowsNulls: false, validate: { isUUID: 4 } },
-        secretKey:              { type: sequelize.STRING(48), allowsNulls: false },
+    this.model = dbconn.conn.define('site', {
+        siteID:                 { type: sequelize.CHAR(36), allowsNulls: false, validate: { isUUID: 4 }, primaryKey: true },
+        dealerID:               { type: sequelize.INTEGER(11), allowsNulls: false },
         baseDomainURL:          { type: sequelize.STRING(255), allowsNulls: false },
         title:                  { type: sequelize.TEXT, allowsNulls: true },
         keywords:               { type: sequelize.TEXT, allowsNulls: true },
@@ -37,4 +36,4 @@ class SiteConfig {
   }
 }
 
-module.exports = SiteConfig;
+module.exports = Site;
