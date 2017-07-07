@@ -38,6 +38,7 @@ class Server {
     this.dbconn = {};
     this.models = {};
     this.controllers = {};
+    this.cli = false;
   }
 
   // ****************************************************************************
@@ -53,7 +54,7 @@ class Server {
 
   close(code) {
     let sigCode;
-    if (_.isUnset(code)) code = 0;
+    code = code || 0;
     switch (code) {
       case 2:
         sigCode = 'SIGINT';
@@ -71,7 +72,10 @@ class Server {
     if (_.hasValue(this.dbconn)) this.dbconn.close();     // Close DB Connection
     if (_.hasValue(this.server)) this.server.close();     // Close HTTP Server
 
-    process.exit(code);
+    // Only end the process if this was started on the command line
+    if (this.cli) {
+      process.exit(code);
+    }
   }
 
   // ****************************************************************************
@@ -225,7 +229,7 @@ if (require.main === module) {
   // Invoked from Command Line
   server = new Server(config);
   server.init();
-} else {
-  // Invoked through requires include
-  module.exports = Server;
+  server.cli = true;
 }
+
+module.exports = Server;
