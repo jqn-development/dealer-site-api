@@ -88,7 +88,7 @@ class VehicleController {
       // Get the dealer ID from the params or form body
       // Or the dealerID from the authenticated request
       let page = req.params.page || req.body.page || req.headers.page || req.query.page;
-      let limit = req.body.limit || req.headers.limit || req.query.limit;
+      let limit = req.params.limit || req.body.limit || req.headers.limit || req.query.limit;
       let dealerID = req.body.dealerID || req.headers.dealerid || req.query.dealerID || req.dealerID;
       let offset;
 
