@@ -15,18 +15,18 @@ module.exports = function(app, controllers, log) {
   app.post('/admin/createAPIKey', controllers.AdminController.createAPIKey.bind(controllers.AdminController));
 
   // admin Create Site
-  app.post('/admin/createSite', controllers.StubControler.action.bind(controllers.StubControler));
-  app.post('/admin/createSite/:dealerID', controllers.StubControler.action.bind(controllers.StubControler));
+  app.post('/admin/createSite', controllers.StubController.action.bind(controllers.StubController));
+  app.post('/admin/createSite/:dealerID', controllers.StubController.action.bind(controllers.StubController));
 
   // admin Delete Site
-  app.post('/admin/deleteSite', controllers.StubControler.action.bind(controllers.StubControler));
-  app.post('/admin/deleteSite/:dealerID', controllers.StubControler.action.bind(controllers.StubControler));
+  app.post('/admin/deleteSite', controllers.StubController.action.bind(controllers.StubController));
+  app.post('/admin/deleteSite/:dealerID', controllers.StubController.action.bind(controllers.StubController));
 
   // admin flush cache
-  app.post('/admin/flushCache', controllers.StubControler.action.bind(controllers.StubControler));
+  app.post('/admin/flushCache', controllers.StubController.action.bind(controllers.StubController));
 
   // admin Permissions assignment
-  app.post('/admin/grantSitePermissions', controllers.StubControler.action.bind(controllers.StubControler));
-  app.post('/admin/revokeSitePermissions', controllers.StubControler.action.bind(controllers.StubControler));
+  app.post('/admin/grantSitePermissions', controllers.StubController.action.bind(controllers.StubController));
+  app.post('/admin/revokeSitePermissions', controllers.StubController.action.bind(controllers.StubController));
 
 }
