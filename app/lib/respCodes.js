@@ -28,6 +28,11 @@ let codes = {
   },
   [401000]: {
     'summary': 'Unauthorized',
+    'message': 'This request is not authorized.',
+    'status': 401,
+  },
+  [401001]: {
+    'summary': 'Unauthorized',
     'message': 'The credentials provided are unknown.',
     'status': 401,
   },
@@ -44,6 +49,11 @@ let codes = {
   [500001]: {
     'summary': 'General Server Error',
     'message': 'A fatal error has occurred on the server.',
+    'status': 500
+  },
+  [500002]: {
+    'summary': 'Database Error',
+    'message': 'A fatal error has occurred on the database',
     'status': 500
   }
 }
