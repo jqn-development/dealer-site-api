@@ -118,16 +118,9 @@ class Server {
     next();
   }
 
-  // authenticateRequest(req, res, next) {
-  //   // TODO: Parse the security information from the request and make sure the SecKey and siteID
-  //   this.log.debug("Authenticating Request");
-  //
-  //   next();
-  // }
-
   logRequest(req, res, next) {
-    // TODO: Parse the full request, make JSON object, and then log it -- req.headers, req.body, req.params
     this.log.debug(`Received Request -- ${req.callID}`);
+    this.log.info(req)
     next();
   }
 
@@ -214,10 +207,10 @@ class Server {
     require('./routes')(this.router, this.controllers, this.log);
 
     // middleware for general handling of route responses
+    app.use(this.logRequest.bind(this));
     app.use(this.logErrors.bind(this));
     app.use(this.errorHandler.bind(this));
     app.use(this.responseHandler.bind(this));
-    app.use(this.logRequest.bind(this));
 
     // middleware for no route (404) error
     app.use(this.handle404Error.bind(this));
