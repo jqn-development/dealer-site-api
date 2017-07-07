@@ -23,10 +23,7 @@ class RootController {
     let reqUtils = new ReqUtils(req);
 
     if (!reqUtils.hasResponse()) {
-      req.hasData = true;
-      req.data = {
-        message: 'It works!'
-      }
+      reqUtils.setData({ message: 'It works!' });
       next();
     } else {
       next();
