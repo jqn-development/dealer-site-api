@@ -7,7 +7,16 @@ const
   , secretKey         = require('secret-key')
 ;
 
+/**
+ * @example
+ * let adminController = new AdminController(dbconn, models, logger)
+ */
 class AdminController {
+  /**
+   * @param {DBConn} dbconn - Database connection object.
+   * @param {!Object} models - The object containing all the models.
+   * @param {Logger} log - The output logger.
+   */
   constructor(dbconn, models, log) {
     this.log = log;
     this.model = new models.ACL(dbconn, log).model;

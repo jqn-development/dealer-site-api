@@ -3,8 +3,13 @@
 const
   _                   = require('../lib/lodashExt')
   , uuidAPIKey        = require('uuid-apikey')
+  , ReqUtils          = require('../lib/reqUtils')
 ;
 
+/**
+ * @example
+ * let authController = new AuthController(dbconn, models, logger)
+ */
 class AuthController {
   /**
    * @param {DBConn} dbconn - Database connection object.
