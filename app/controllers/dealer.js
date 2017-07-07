@@ -53,10 +53,15 @@ class DealerController {
             req.data = dealer;
             next();
           }
+        })
+        .catch((err) => {
+          req.hasError = true;
+          req.respCode = 500001;
+          next(err);
         });
       } catch (err) {
         req.hasError = true;
-        req.respCode = 500000;
+        req.respCode = 500001;
         next(err);
       }
     } else {

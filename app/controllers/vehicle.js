@@ -67,6 +67,11 @@ class VehicleController {
               next('The \'dealerID\' passed is invalid for this vehicle.');
             }
           }
+        })
+        .catch((err) => {
+          req.hasError = true;
+          req.respCode = 500001;
+          next(err);
         });
       } catch (err) {
         req.hasError = true;
@@ -127,6 +132,11 @@ class VehicleController {
             req.count = vehicles.length;
           }
           next();
+        })
+        .catch((err) => {
+          req.hasError = true;
+          req.respCode = 500001;
+          next(err);
         });
       } catch(err) {
         req.hasError = true;
