@@ -19,7 +19,7 @@ class StubController {
     this.log = log;
   }
 
-  action() {
+  action(req, res, next) {
     let reqUtils = new ReqUtils(req);
 
     if (!reqUtils.hasResponse()) {
@@ -29,4 +29,4 @@ class StubController {
   }
 }
 
-module.exports = SiteController;
+module.exports = StubController;
