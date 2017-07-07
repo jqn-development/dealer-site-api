@@ -35,7 +35,7 @@ class Logger {
     ];
 
     // Optimization -- Add console logging if not in production
-    if (process.env.NODE_ENV !== 'production'){
+    if ((process.env.NODE_ENV !== 'production') && (process.env.NODE_ENV !== 'test')) {
       transports.push(
         new (winston.transports.Console) ({
           formatter: this.formatter
