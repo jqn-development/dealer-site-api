@@ -72,8 +72,8 @@ class AuthController {
       // TODO: Add Redis caching here, these responses need to be very fast
       // alternatively, add a lookup array that persists and the data is pulled from
       this.model.findOne({
-        where: { apiKey: req.apiUUID },
-        include: [{model: this.modelACLSite, as: 'acl_site'}]})
+          where: { apiKey: req.apiUUID }
+        })
         .then((acl) => {
           if (!acl) {
             // The API Key could not be found
