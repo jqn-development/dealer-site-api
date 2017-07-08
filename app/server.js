@@ -15,7 +15,7 @@ const
   , bodyParser        = require('body-parser')
 
   , Logger            = require('./lib/logger')
-  , DBConn            = require('./lib/dbConn')
+  , DBConn            = require('./lib/dbconn')
   , respCodes         = require('./lib/respCodes')
 
   , config            = require('../config/config')
