@@ -4,6 +4,3 @@ node_js:
 before_script:
   - npm install -g gulp-cli gulp
 script: gulp
-cache:
-  directories:
-    - "node_modules"
