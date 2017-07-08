@@ -23,6 +23,7 @@
     "gulp-plumber": "^1.1.0",
     "gulp-rename": "^1.2.2",
     "mocha": "^3.4.2",
+    "superagent": "^3.5.2",
     "supertest": "^3.0.0"
   },
   "dependencies": {
