@@ -37,7 +37,9 @@ class DealerController {
         return;
       }
 
-      // TODO: Do validation on params (SQL Injection)
+      // TODO: Add parameter validation and SQL Injection checking where needed
+
+
       try {
         this.model.findById(dealerID)
         .then((dealer) => {
@@ -82,7 +84,7 @@ class DealerController {
         return;
       }
 
-      // TODO: Do validation on params (SQL Injection)
+      // TODO: Add parameter validation and SQL Injection checking where needed
       try {
         this.model.findById(dealerID)
         .then((dealer) => {

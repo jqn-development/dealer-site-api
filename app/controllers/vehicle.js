@@ -38,7 +38,7 @@ class VehicleController {
         next(`Required parameters [${reqParams}] are missing from this request.`);
         return;
       }
-      // TODO: Do validation on params (SQL Injection)
+      // TODO: Add parameter validation and SQL Injection checking where needed
       try {
         this.model.findById(vehicleID)
         .then((vehicle) => {
@@ -96,7 +96,7 @@ class VehicleController {
         next(`Required parameters [${reqParams}] are missing from this request.`);
         return;
       }
-      // TODO: Do validation on params (SQL Injection)
+      // TODO: Add parameter validation and SQL Injection checking where needed
       let options = {
         where: {
           dealerID: dealerID
