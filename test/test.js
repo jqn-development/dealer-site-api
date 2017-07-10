@@ -17,7 +17,9 @@ describe('loading server', () => {
   before(() => {
     Server = require('../app/server');
 
-    // TODO: Inject test credentials for Travis Build
+    // Inject testing credentials into config object
+    config.credentials.aws = require(__dirname + '/../config/aws.test.credentials.json');
+    config.credentials.mysql = require(__dirname + '/../config/mysql.test.credentials.json');
     server = new Server(config);
     server.init();
     svr = server.server;
@@ -82,5 +84,10 @@ describe('loading server', () => {
       .query({ apiKey: testCreds.apiKey, dealerID: 100 })
       .expect(200, done);
   });
+
+  // TODO: Add Admin routes
+  // TODO: Add Site (Config) routes
+  // TODO: Add dealer test data to database so can test updating
+  // TODO: Add vehicle test data to database so can test pulling a single vehicle
 
 });

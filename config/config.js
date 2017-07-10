@@ -13,7 +13,8 @@ module.exports = {
   },
   'credentials': {
     'aws': require(__dirname + '/aws.credentials.json'),
-    'mysql': require(__dirname + '/mysql.credentials.json')
+    'mysql': require(__dirname + '/mysql.credentials.json'),
+    'redis': require(__dirname + '/redis.credentials.json')
   },
   'db': {
     'pool': {
