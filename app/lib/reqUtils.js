@@ -38,6 +38,20 @@ class ReqUtils {
     req.data = data;
   }
 
+  checkAuth(options, req) {
+    // Set defaults where empty
+    req = req || this.req;
+    options = options || {
+      super: false,
+      signed: false,
+      server: false,
+      client: false
+    }
+    let secCon = req.securityContext;
+    // Aggregate all the options and test equality with the security context
+    return (secCon.super == options.super) && (secCon.signed == options.signed) &&
+           (secCon.server == options.server) && (secCon.client == options.client);
+  }
 }
 
 module.exports = ReqUtils;

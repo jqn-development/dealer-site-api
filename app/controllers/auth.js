@@ -17,6 +17,7 @@ class AuthController {
    * @param {Logger} log - The output logger.
    */
   constructor(dbconn, models, log) {
+    this.dbconn = dbconn
     this.log = log;
     this.acl = new models.ACL(dbconn, log);
     this.model = this.acl.model;
@@ -42,9 +43,10 @@ class AuthController {
     let reqUtils = new ReqUtils(req);
 
     req.securityContext = {
-      client: false,
+      super: false,
+      signed: false,
       server: false,
-      super: false
+      client: false
     };
 
     this.log.debug('Authenticating Request');
@@ -98,8 +100,15 @@ class AuthController {
                 // Set the super admin context
                 if (acl.isSuperAdmin) req.securityContext.super = true;
 
-                // TODO: Get Sites/Dealers Permissions?
-                //if ()
+                // Get Sites/Dealers Permissions
+                this.dbconn.conn.query('CALL GetSiteIDsByACLID( :aclID )', { replacements: { aclID: acl.aclID }, type: this.dbconn.conn.QueryTypes.SELECT })
+                .then((data) => {
+                  acl.sites = data;
+                })
+                .catch((err) => {
+                  reqUtils.setError(500001);
+                  next(err);
+                });
               }
             }
 

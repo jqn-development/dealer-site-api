@@ -26,7 +26,15 @@ class AdminController {
     let reqUtils = new ReqUtils(req);
 
     if (!reqUtils.hasResponse()) {
-      // TODO: Context and Auth Check
+
+      // Context and Auth Check
+      if (!reqUtils.checkAuth({super: true, server: true})) {
+          // Unauthorized user
+          reqUtils.setError(403000);
+          next(`The API Provided is not authorized to access this resource`);
+          return;
+      }
+
       // Get Parameters
 
       // Check Required parameters
@@ -39,7 +47,7 @@ class AdminController {
         return;
       }
 
-      // TODO: Do validation on params (SQL Injection)
+      // TODO: Add parameter validation and SQL Injection checking where needed
       try {
         let apiKey = uuidAPIKey.create();
         let secret = secretKey.create(apiKey.apiKey);
