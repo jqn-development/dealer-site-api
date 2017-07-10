@@ -38,6 +38,11 @@ gulp.task('copyConfig', () => {
       .pipe(rename('mysql.credentials.json'))
       .pipe(gulp.dest(configFolder));
   }
+  if (!fs.existsSync(configFolder + '/redis.credentials.json')) {
+    gulp.src(configFolder + '/example.redis.credentials.json')
+      .pipe(rename('redis.credentials.json'))
+      .pipe(gulp.dest(configFolder));
+  }
   return;
 });
 
