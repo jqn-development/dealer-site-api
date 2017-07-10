@@ -20,6 +20,7 @@ describe('loading server', () => {
     // Inject testing credentials into config object
     config.credentials.aws = require(__dirname + '/../config/aws.test.credentials.json');
     config.credentials.mysql = require(__dirname + '/../config/mysql.test.credentials.json');
+    config.credentials.redis = require(__dirname + '/../config/redis.test.credentials.json');
     server = new Server(config);
     server.init();
     svr = server.server;
