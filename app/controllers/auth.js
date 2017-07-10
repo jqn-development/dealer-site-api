@@ -39,6 +39,8 @@ class AuthController {
   }
 
   authenticateRequest(req, res, next) {
+    let reqUtils = new ReqUtils(req);
+
     req.securityContext = {
       client: false,
       server: false,
@@ -51,8 +53,7 @@ class AuthController {
       // Check that an API Key has been provided
       if (!this.hasAPIKey(req)) {
         // No API Key -- 401 Unauthorized
-        req.hasError = true;
-        req.respCode = 401000;
+        reqUtils.setError(401000);
         next(`An API Key is required for access. Please provide an API Key and try again.`);
         return;
       }
@@ -60,8 +61,7 @@ class AuthController {
       // API Key is provided, check that API Key is good
       if (!uuidAPIKey.isAPIKey(req.apiKey)) {
         // Bad API Key -- 401 Unauthorized
-        req.hasError = true;
-        req.respCode = 401001;
+        reqUtils.setError(401001);
         next(`The API Key provided is invalid.`);
         return;
       }
@@ -77,8 +77,7 @@ class AuthController {
         .then((acl) => {
           if (!acl) {
             // The API Key could not be found
-            req.hasError = true;
-            req.respCode = 401001;
+            reqUtils.setError(401001);
             next(`The API Key provided is invalid.`);
           } else {
             // Set Client Security context
@@ -89,8 +88,7 @@ class AuthController {
               // Check that secret key matches the ACL
               if (acl.secretKey !== req.secretKey) {
                 // The Secret is invalid
-                req.hasError = true;
-                req.respCode = 401001;
+                reqUtils.setError(401001);
                 next(`The secret provided is invalid.`);
                 return;
               } else {
@@ -111,13 +109,11 @@ class AuthController {
           }
         })
         .catch((err) => {
-          req.hasError = true;
-          req.respCode = 500001;
+          reqUtils.setError(500001);
           next(err);
         });
     } catch (err) {
-      req.hasError = true;
-      req.respCode = 500001;
+      reqUtils.setError(500001);
       next(err);
     }
   }
