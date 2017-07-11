@@ -1,3 +1,5 @@
+// test/restAPI.js
+
 let
   request             = require('supertest')
   , test              = require('unit.js')
@@ -11,7 +13,7 @@ let testCreds = {
   secret: 'ZEM0H3A-W9TBS2P-37EBAPQ'
 }
 
-describe('loading server', () => {
+describe('REST Endpoint Tests', () => {
   let Server, server, svr;
   process.env.NODE_ENV = 'production';            // Set the environment to testing
   before(() => {
@@ -65,7 +67,15 @@ describe('loading server', () => {
     request(svr)
       .get('/site/vehicle/all')
       .query({ apiKey: testCreds.apiKey, dealerID: 100 })
-      .expect(200, done);
+      .expect(200, done)
+      .expect((res) => { res.body.count = 100; });
+  });
+  it('check dealer GET (/site/vehilce/all) w/ dealerID and limit', (done) => {
+    request(svr)
+      .get('/site/vehicle/all')
+      .query({ apiKey: testCreds.apiKey, dealerID: 100, limit: 10 })
+      .expect(200, done)
+      .expect((res) => { res.body.count = 10; });
   });
   it('check dealer GET (/site/vehicle) w/ vehicleID w/o dealerID', (done) => {
     request(svr)
