@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "aws-sdk": "^2.82.0",
+    "bluebird": "^3.5.0",
     "body-parser": "^1.17.2",
     "encode32": "^1.1.0",
     "express": "^4.15.3",

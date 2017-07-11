@@ -22,5 +22,8 @@ module.exports = {
       'min': 1,
       'idle': 10000
     }
+  },
+  'cache': {
+    'ttl': 5
   }
 }

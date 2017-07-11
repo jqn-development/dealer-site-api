@@ -8,8 +8,6 @@ const
   , https             = require('https')
   , moment            = require('moment')
   , uuidv4            = require('uuid/v4')
-  , test              = require('unit.js')
-  , crypto            = require('crypto')
 
   , express           = require('express')
   , bodyParser        = require('body-parser')
@@ -17,6 +15,7 @@ const
   , Logger            = require('./lib/logger')
   , DBConn            = require('./lib/dbconn')
   , respCodes         = require('./lib/respCodes')
+  , Cache             = require('./lib/cache')
 
   , config            = require('../config/config')
 ;
@@ -33,10 +32,13 @@ class Server {
     this.server = {};
     this.config = config;
     this.port = config.server.port || 8080;  // Configure the port number
-    this.router = {};
+
     this.logger = {};
     this.log = {};
-    this.dbconn = {};
+    this.dbconn = null;
+    this.cache = null;
+
+    this.router = {};
     this.models = {};
     this.controllers = {};
     this.cli = false;
@@ -70,6 +72,7 @@ class Server {
 
     // Perform gracful shutdown here
     this.log.info(`Received exit code ${sigCode}, performing graceful shutdown`);
+    if (_.hasValue(this.cache)) this.cache.close();     // Close Redis Connection
     if (_.hasValue(this.dbconn)) this.dbconn.close();     // Close DB Connection
     if (_.hasValue(this.server)) this.server.close();     // Close HTTP Server
 
@@ -116,9 +119,10 @@ class Server {
 
   attachCallID(req, res, next) {
     // Generate CallID attach to the request object
+    let now = moment();
     req.callID = uuidv4();
-    req.time = moment().format() + "Z";
-    req.timestamp = moment().format('x');
+    req.time = now.format() + "Z";
+    req.timestamp = now.format('x');
     req.hasData = false;
     next();
   }
@@ -165,6 +169,7 @@ class Server {
 
     this.setupLogging();
     this.setupDBConnection();
+    //this.setupCache();
     this.setupServer(this.app);
   }
 
@@ -181,6 +186,10 @@ class Server {
   setupDBConnection() {
     this.dbconn = new DBConn(this.config, this.log);
     this.dbconn.connect();
+  }
+
+  setupCache() {
+    this.cache = new Cache(this.config);
   }
 
   setupServer(app) {
@@ -226,6 +235,7 @@ class Server {
   }
 }
 
+// Check how the server was invoked -- in theory, we will only get here if this has been invoked on the CLI but double check
 if (require.main === module) {
   // Invoked from Command Line
   server = new Server(config);
