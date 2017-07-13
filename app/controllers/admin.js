@@ -27,67 +27,55 @@ class AdminController {
   createAPIKey(req, res, next) {
     let reqUtils = new ReqUtils(req);
 
-    if (!reqUtils.hasResponse()) {
-
-      // Context and Auth Check
-      if (!reqUtils.checkAuth({super: true, server: true})) {
-          // Unauthorized user
-          reqUtils.setError(403000);
-          next(`The API Provided is not authorized to access this resource`);
-          return;
+    reqUtils.handleRequest({
+      params: {},
+      security: { super: true, server: true }
+    },
+    (req, res, next) => {
+      let apiKey = uuidAPIKey.create();
+      let secret = secretKey.create(apiKey.apiKey);
+      let obj = {
+        apiKey: apiKey.uuid,
+        secretKey: secret.secret,
+        secretIV: secret.iv,
+        secretTimestamp: secret.timestamp,
+        isSuperAdmin: false,
+        isDeleted: false
       }
-
-      // Get Parameters
-
-      // Check Required parameters
-      let reqParams = reqUtils.hasRequiredParams({});
-      if (reqParams.length > 0) {
-        // We have missing parameters, report the error
-        reqUtils.setError(400003);
-        // Return an error below
-        next(`Required parameters [${reqParams}] are missing from this request.`);
-        return;
-      }
-
-      // TODO: Add parameter validation and SQL Injection checking where needed
-      try {
-        let apiKey = uuidAPIKey.create();
-        let secret = secretKey.create(apiKey.apiKey);
-        let obj = {
-          apiKey: apiKey.uuid,
-          secretKey: secret.secret,
-          secretIV: secret.iv,
-          secretTimestamp: secret.timestamp,
-          isSuperAdmin: false,
-          isDeleted: false
-        }
-        this.model.create(obj)
-        .then((acl) => {
-          if (!acl) {
-            reqUtils.setError(500002);
-            next(`The new API Key could not be created.`);
-          } else {
-            acl.id = acl.apiKey;
-            acl.apiKey = uuidAPIKey.toAPIKey(acl.id);
-            reqUtils.setData(_.pick(acl, ['id', 'apiKey', 'secretKey', 'lastUpdated', 'created']));
-            next();
-          }
-        })
-        .catch((err) => {
+      this.model.create(obj)
+      .then((acl) => {
+        if (!acl) {
           reqUtils.setError(500002);
-          next(err);
-        });
-      } catch (err) {
+          next(`The new API Key could not be created.`);
+        } else {
+          acl.id = acl.apiKey;
+          acl.apiKey = uuidAPIKey.toAPIKey(acl.id);
+          reqUtils.setData(_.pick(acl, ['id', 'apiKey', 'secretKey', 'lastUpdated', 'created']));
+          next();
+        }
+      })
+      .catch((err) => {
         reqUtils.setError(500001);
         next(err);
-      }
-    } else {
-      next();
-    }
+      });
+    }, next, res);
   }
 
+  // =======================================================
+  //
+  // =======================================================
   createSite(req, res, next) {
+    let reqUtils = new ReqUtils(req);
 
+    reqUtils.handleRequest({
+      params: {
+        dealerID: { type: 'int', source: ['params', 'body', 'headers', 'query'], required: true }
+      },
+      security: { super: true, server: true }
+    },
+    (req, res, next) => {
+      // TODO: create site logic
+    }, next, res);
   }
 
   flushCache(req, res, next) {
