@@ -26,6 +26,11 @@ let codes = {
     'message': 'The request is missing required parameters.',
     'status': 400,
   },
+  [400004]: {
+    'sumary': 'Invalid Paramaters',
+    'message': 'The request paramaters incorrect, a different data type was expected.',
+    'status': 400,
+  },
   [401000]: {
     'summary': 'Unauthorized',
     'message': 'This request is not authorized.',
@@ -54,6 +59,11 @@ let codes = {
   [500002]: {
     'summary': 'Database Error',
     'message': 'A fatal error has occurred on the database',
+    'status': 500
+  },
+  [500003]: {
+    'summary': 'Cache Error',
+    'message': 'A fatal error has occurred on the caching server',
     'status': 500
   }
 }
