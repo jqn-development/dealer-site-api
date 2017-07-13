@@ -90,6 +90,30 @@ class AdminController {
 
   }
 
+  flushCache(req, res, next) {
+    let reqUtils = new ReqUtils(req);
+
+    reqUtils.handleRequest({
+      params: {},
+      security: { super: true, server: true }
+    },
+    (req, res, next) => {
+      this.cache.clear()
+      .then((result) => {
+        if (!result) {
+          reqUtils.setError(500003);
+          next(`An unknown error on the cache server occurred.`);
+        } else {
+          reqUtils.setData({message: "OK"});
+          next();
+        }
+      })
+      .catch((err) => {
+        reqUtils.setError(500003);
+        next(err);
+      });
+    }, next, res);
+  }
 }
 
 module.exports = AdminController;

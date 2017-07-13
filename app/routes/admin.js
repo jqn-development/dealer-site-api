@@ -23,7 +23,7 @@ module.exports = function(app, controllers, log) {
   app.post('/admin/deleteSite/:dealerID', controllers.StubController.action.bind(controllers.StubController));
 
   // admin flush cache
-  app.post('/admin/flushCache', controllers.StubController.action.bind(controllers.StubController));
+  app.post('/admin/flushCache', controllers.AdminController.flushCache.bind(controllers.AdminController));
 
   // admin Permissions assignment
   app.post('/admin/grantSitePermissions', controllers.StubController.action.bind(controllers.StubController));
