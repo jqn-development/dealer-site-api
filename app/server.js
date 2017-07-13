@@ -107,7 +107,9 @@ class Server {
       status: respInfo.status,
       callID: req.callID,
       time: req.time,
-      timestamp: req.timestamp
+      timestamp: req.timestamp,
+      ip: req.ip,
+      ipForwarding: req.ips
     };
     if (_.hasValue(req.data)) respBlock.data = req.data;
     if (_.hasValue(req.count)) respBlock.count = req.count;
@@ -169,7 +171,7 @@ class Server {
 
     this.setupLogging();
     this.setupDBConnection();
-    //this.setupCache();
+    this.setupCache();
     this.setupServer(this.app);
   }
 
@@ -189,7 +191,7 @@ class Server {
   }
 
   setupCache() {
-    this.cache = new Cache(this.config);
+    this.cache = new Cache(this.config, this.log);
   }
 
   setupServer(app) {
@@ -207,7 +209,7 @@ class Server {
     this.models = require('./models')(this.log);
 
     // Load controllers
-    this.controllers = require('./controllers')(this.dbconn, this.models, this.log);
+    this.controllers = require('./controllers')(this.dbconn, this.models, this.cache, this.log);
 
     // bind middleware to use for all requests
     // The 'bind' statements are there to preserve the scope of this class

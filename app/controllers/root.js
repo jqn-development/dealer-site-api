@@ -15,7 +15,7 @@ class RootController {
    * @param {!Object} models - The object containing all the models.
    * @param {Logger} log - The output logger.
    */
-  constructor(dbconn, models, log) {
+  constructor(dbconn, models, cache, log) {
     this.log = log;
   }
 

@@ -17,7 +17,7 @@ let controllers = {};
  * inside the host code.
  */
 
-module.exports = (dbconn, models, log) => {
+module.exports = (dbconn, models, cache, log) => {
    log.info("Loading controllers...");
    fs.readdirSync(__dirname)
      .filter(function(file) {
@@ -26,7 +26,7 @@ module.exports = (dbconn, models, log) => {
      .forEach(function(file) {
        cls = require(path.join(__dirname, file));
        log.info(`Loading controller: '${cls.name}'`);
-       controllers[cls.name] = new cls(dbconn, models, log);
+       controllers[cls.name] = new cls(dbconn, models, cache, log);
      });
    return controllers;
  }

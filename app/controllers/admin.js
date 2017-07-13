@@ -17,9 +17,11 @@ class AdminController {
    * @param {!Object} models - The object containing all the models.
    * @param {Logger} log - The output logger.
    */
-  constructor(dbconn, models, log) {
+  constructor(dbconn, models, cache, log) {
     this.log = log;
+    this.cache = cache;
     this.model = new models.ACL(dbconn, log).model;
+    this.modelSite = new models.Site(dbconn,log).model;
   }
 
   createAPIKey(req, res, next) {

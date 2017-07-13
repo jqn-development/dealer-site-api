@@ -16,7 +16,7 @@ class AuthController {
    * @param {!Object} models - The object containing all the models.
    * @param {Logger} log - The output logger.
    */
-  constructor(dbconn, models, log) {
+   constructor(dbconn, models, cache, log) {
     this.dbconn = dbconn
     this.log = log;
     this.acl = new models.ACL(dbconn, log);
@@ -69,9 +69,8 @@ class AuthController {
       }
       req.apiUUID = uuidAPIKey.toUUID(req.apiKey);
 
-      // Lookup the API Key in the database
-
       // TODO: Add Redis caching here, these responses need to be very fast
+      // Lookup the API Key in the database
       // alternatively, add a lookup array that persists and the data is pulled from
       this.model.findOne({
           where: { apiKey: req.apiUUID }
