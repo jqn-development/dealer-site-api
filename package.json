@@ -6,6 +6,7 @@
   "scripts": {
     "test": "mocha",
     "build": "gulp",
+    "apiKeyTool": "apiKeyTool",
     "start": "node app/server.js"
   },
   "author": "Jay Reardon <jay.reardon@dealerslink.com>",
@@ -23,6 +24,7 @@
     "gulp-notify": "^3.0.0",
     "gulp-plumber": "^1.1.0",
     "gulp-rename": "^1.2.2",
+    "loadtest": "^2.3.0",
     "minimatch": "^3.0.4",
     "mocha": "^3.4.2",
     "superagent": "^3.5.2",
@@ -32,6 +34,8 @@
     "aws-sdk": "^2.82.0",
     "bluebird": "^3.5.0",
     "body-parser": "^1.17.2",
+    "colors": "^1.1.2",
+    "commander": "^2.11.0",
     "encode32": "^1.1.0",
     "express": "^4.15.3",
     "http": "0.0.0",
@@ -39,14 +43,14 @@
     "joi": "^10.6.0",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
-    "mysql2": "^1.3.5",
+    "mysql2": "^1.3.6",
     "redis": "^2.7.1",
     "secret-key": "^1.2.1",
-    "sequelize": "^4.3.0",
+    "sequelize": "^4.3.1",
     "unit.js": "^2.0.0",
     "uuid": "^3.1.0",
-    "uuid-apikey": "^1.1.4",
-    "validator": "^7.2.0",
+    "uuid-apikey": "^1.2.1",
+    "validator": "^8.0.0",
     "winston": "^2.3.1",
     "winston-cloudwatch": "^1.11.3"
   }
