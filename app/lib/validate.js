@@ -3,6 +3,7 @@
 const
   _                   = require('./lodashExt')
   , validator         = require('validator')
+  , uuidAPIKey        = require('uuid-apikey')
 ;
 
 function validate(value, type, options) {
@@ -25,6 +26,15 @@ function validate(value, type, options) {
       break;
     case 'uuid':
       test = validator.isUUID(value.toString());
+      break;
+    case 'url':
+      test.validator.isURL(value.toString(), options);
+      break;
+    case 'fqdn':
+      test = validator.isFQDN(value.toString(), options);
+      break;
+    case 'apikey':
+      test = uuidAPIKey.isAPIKey(value.toString());
       break;
     case 'string':
     case 'any':
