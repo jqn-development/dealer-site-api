@@ -72,6 +72,23 @@ class ReqUtils {
     return test;
   }
 
+  retrieveParams(params, req) {
+    req = req || this.req;
+    req.handler = params;
+    req.locals = {};
+    let current;
+    for (let key in params) {
+      current = params[key];
+      let value;
+      for (let source of current.source)
+      {
+        // Go through the possible sources in the request
+        value = value || (source === 'headers'?req[source][key.toLowerCase()]:req[source][key]);
+      }
+      req.handler[key].value = req.locals[key] = value;
+    }
+  }
+
   hasRequiredParams(params) {
     // Check Required parameters
     params = params || {};
@@ -134,23 +151,6 @@ class ReqUtils {
       }
     }
     return test;
-  }
-
-  retrieveParams(params, req) {
-    req = req || this.req;
-    req.handler = params;
-    req.locals = {};
-    let current;
-    for (let key in params) {
-      current = params[key];
-      let value;
-      for (let source of current.source)
-      {
-        // Go through the possible sources in the request
-        value = value || (source === 'headers'?req[source][key.toLowerCase()]:req[source][key]);
-      }
-      req.handler[key].value = req.locals[key] = value;
-    }
   }
 
   // Expects an object containing paramater and security information
