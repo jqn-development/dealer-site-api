@@ -78,9 +78,10 @@ class VehicleController {
         offset: 0,
         limit: req.locals.limit,
         table: 'vehicle'
-      }
+      };
       if (req.locals.page > 1) options.offset = offset;
       // TODO: Retrieve from cache
+      // TODO: Add filters
       this.model.findAll(options)
       .then((vehicles) => {
         if (!vehicles) {
