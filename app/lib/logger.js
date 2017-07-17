@@ -14,6 +14,7 @@ const
 class Logger {
   constructor(config) {
     this.logDir = config.logging.logDir || './logs';
+
     let transports = [
       new (winston.transports.File) ({
         filename: this.logDir + '/info.log',
@@ -58,6 +59,13 @@ class Logger {
       formatter: this.formatter,
       transports: transports
     };
+
+    // Create log folder if it does not already exist
+    if (!fs.existsSync(config.logging.logDir)) {
+      console.log('Creating log folder');
+      fs.mkdirSync(config.logging.logDir);
+    }
+
     // Merge options from config into this object
     this.option = _.assign(this.options, config.logging.options);
     this.log = new (winston.Logger) (this.options);

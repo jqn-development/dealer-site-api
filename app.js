@@ -63,11 +63,6 @@ class App {
   }
 
   setupLogging() {
-    // Create log folder if it does not already exist
-    if (!fs.existsSync(config.logging.logDir)) {
-      console.log('Creating log folder');
-      fs.mkdirSync(config.logging.logDir);
-    }
     this.logger = new Logger(config);
     this.log = this.logger.log;
   }
