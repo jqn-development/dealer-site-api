@@ -82,10 +82,11 @@ class AuthController {
             next(`The API Key provided is invalid.`);
           } else {
             // Set Client Security context
-            req.acl = acl;
+            req.acl = acl.dataValues;
 
             // Check Server Sec context
             if (this.hasSecret(req)) {
+
               // Check that secret key matches the ACL
               if (acl.secretKey !== req.secretKey) {
                 // The Secret is invalid
@@ -95,25 +96,26 @@ class AuthController {
               } else {
                 // Set the server side context
                 req.securityContext.server = true;
-
-                // Set the super admin context
-                if (acl.isSuperAdmin) req.securityContext.super = true;
-
-                // Get Sites/Dealers Permissions
-                this.dbconn.conn.query('CALL GetSiteIDsByACLID( :aclID )', { replacements: { aclID: acl.aclID }, type: this.dbconn.conn.QueryTypes.SELECT })
-                .then((data) => {
-                  acl.sites = data;
-                })
-                .catch((err) => {
-                  reqUtils.setError(500001);
-                  next(err);
-                });
-              }
+                // Set the client side context
+                req.securityContext.client = true;              }
+            } else {
+              // Set the client side context
+              req.securityContext.client = true;
             }
 
-            // Set the client side context
-            req.securityContext.client = true;
-            next();
+            // Set the super admin context
+            if (acl.isSuperAdmin) req.securityContext.super = true;
+
+            // Get Sites/Dealers Permissions
+            this.dbconn.conn.query('CALL GetSiteIDsByACLID( :aclID )', { replacements: { aclID: acl.aclID } })
+            .then((data) => {
+              req.acl.sites = data || [];
+              next();
+            })
+            .catch((err) => {
+              reqUtils.setError(500001);
+              next(err);
+            });
           }
         })
         .catch((err) => {
