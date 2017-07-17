@@ -1,9 +1,7 @@
 // app/models/dynamicField.js
 
 const
-  _                 = require('../lib/lodashExt')
-  , fs                = require('fs')
-  , moment            = require('moment')
+  _                   = require('../lib/lodashExt')
   , sequelize         = require('sequelize')
   , logger            = require('../lib/logger')
 ;

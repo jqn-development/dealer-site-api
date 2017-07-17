@@ -2,8 +2,6 @@
 
 const
   _                   = require('../lib/lodashExt')
-  , fs                = require('fs')
-  , moment            = require('moment')
   , sequelize         = require('sequelize')
   , logger            = require('../lib/logger')
 ;

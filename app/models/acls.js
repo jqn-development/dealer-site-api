@@ -1,13 +1,11 @@
 // app/models/acls.js
 
 const
-  _                 = require('../lib/lodashExt')
-  , fs                = require('fs')
-  , moment            = require('moment')
+  _                   = require('../lib/lodashExt')
   , sequelize         = require('sequelize')
   , logger            = require('../lib/logger')
-  , SiteModel         = require('./site')
 ;
+
 
 class ACL {
   constructor(dbconn, logger) {

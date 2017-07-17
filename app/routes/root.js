@@ -2,11 +2,6 @@
 
 const
   _                   = require('../lib/lodashExt')
-  , fs                = require('fs')
-  , path              = require('path')
-  , moment            = require('moment')
-  , sequelize         = require('sequelize')
-  , winston           = require('winston')
 ;
 
 module.exports = function(app, controllers, log) {
