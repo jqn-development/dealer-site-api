@@ -6,6 +6,7 @@ const
   , logger            = require('../lib/logger')
 ;
 
+
 class Site {
   constructor(dbconn, logger) {
     this.dbconn = dbconn;
@@ -23,7 +24,8 @@ class Site {
         priceLabelInternetNew:  { type: sequelize.STRING(100), allowsNulls: true },
         priceLabelInternetUsed: { type: sequelize.STRING(100), allowsNulls: true },
         bookLabel:              { type: sequelize.STRING(100), allowsNulls: true },
-        supressStockPhotos:     { type: sequelize.BOOLEAN, allowsNulls: false, defaultValue: 0 }
+        suppressStockPhotos:    { type: sequelize.BOOLEAN, allowsNulls: false, defaultValue: 0 },
+        isDeleted:              { type: sequelize.BOOLEAN, allowsNulls: false, defaultValue: 0 }
       }, {
         timestamps: true,
         createdAt: 'created',
