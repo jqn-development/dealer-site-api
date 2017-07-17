@@ -1,6 +1,7 @@
 module.exports = {
   'server': {
     'port': 8080,
+    'shutdownTime': 1000
   },
   'logging': { // Logging Configuration
     'logDir': './logs',
@@ -25,5 +26,9 @@ module.exports = {
   },
   'cache': {
     'ttl': 5
+  },
+  'cloudwatch': {
+    'logGroupName': 'website-api',
+    'logStreamName': 'requests'
   }
 }
