@@ -30,6 +30,7 @@ class Server {
     this.server = {};
     this.config = config;
     this.port = config.server.port || 8080;  // Configure the port number
+    this.isActive = false;
 
     this.log = log;
     this.dbconn = null;
@@ -59,6 +60,7 @@ class Server {
       this.log.info(`Shutting down HTTP listener`);
       this.server.close();
     }
+    this.isActive = false;
   }
 
   // ****************************************************************************
@@ -147,6 +149,7 @@ class Server {
     this.setupDBConnection();
     this.setupCache();
     this.setupServer(this.app);
+    this.isActive = true;
   }
 
   setupDBConnection() {
