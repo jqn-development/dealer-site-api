@@ -31,6 +31,11 @@ let codes = {
     'message': 'The request paramaters incorrect, a different data type was expected.',
     'status': 400,
   },
+  [400005]: {
+    'sumary': 'Removed Record',
+    'message': 'The record requested was delete and no longer exists.',
+    'status': 400,
+  },
   [401000]: {
     'summary': 'Unauthorized',
     'message': 'This request is not authorized.',
