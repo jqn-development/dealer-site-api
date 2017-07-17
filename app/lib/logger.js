@@ -27,12 +27,22 @@ class Logger {
         level: 'error',
         formatter: this.formatter
       })
-      // TODO: Add CloudWatch Loggging
-      // new (winstonCloudWatch) ({
-      //   logGroupName: '',
-      //   logStreamName: ''
-      // })
     ];
+
+    // Add cloudwatch logging when in production
+    if (process.env.NODE_ENV === 'production') {
+      transports.push(
+        new (winstonCloudWatch) ({
+          level: 'info',
+          awsAccessKeyId: config.credentials.aws.accessKeyId,
+          awsSecretKey: config.credentials.aws.secretAccessKey,
+          awsRegion: config.credentials.aws.region,
+          logGroupName: config.cloudwatch.logGroupName,
+          logStreamName: config.cloudwatch.logStreamName,
+          messageFormatter: this.formatter
+        })
+      );
+    }
 
     // Optimization -- Add console logging if not in production
     if ((process.env.NODE_ENV !== 'production') && (process.env.NODE_ENV !== 'test')) {
