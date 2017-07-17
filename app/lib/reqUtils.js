@@ -29,9 +29,9 @@ class ReqUtils {
     req.data = data;
   }
 
-  checkAuth(options, req) {
-    // Set defaults where empty
+  checkAuthContext(options, req) {
     req = req || this.req;
+    // Set defaults where empty
     options = _.merge({
                   super: false,
                   signed: false,
@@ -43,6 +43,33 @@ class ReqUtils {
     // Aggregate all the options and test equality with the security context
     return (_.implies(options.super, secCon.super)) && (_.implies(options.signed, secCon.signed)) &&
            (_.implies(options.server, secCon.server)) && (_.implies(options.client, secCon.client));
+  }
+
+  // Checks the current request (connected ACL and passed siteID/dealerID (if it exists))
+  checkSitePermissions(req) {
+    req = req || this.req;
+    let test = true;
+    // Only test this if the ACL is not a super user
+    if (!req.securityContext.super) {
+      // If has a siteID as a part of the request
+      let siteTest = true;
+      let dealerTest = true;
+      if (_.hasValue(req.locals.siteID)) {
+        siteTest = false;
+        for (let site of req.acl.sites) {
+          siteTest = siteTest || (req.locals.siteID == site.siteID);
+        }
+      }
+      // If has a dealerID as a part of the request
+      if (_.hasValue(req.locals.dealerID)) {
+        dealerTest = false;
+        for (let site of req.acl.sites) {
+          dealerTest = dealerTest || (req.locals.dealerID == site.dealerID);
+        }
+      }
+      test = (siteTest && dealerTest);
+    }
+    return test;
   }
 
   hasRequiredParams(params) {
@@ -138,8 +165,8 @@ class ReqUtils {
     req = req || this.req;
     // Check if this has already been handled
     if (!this.hasResponse(req)) {
-      // Context and Auth Check
-      if (!this.checkAuth(params.security, req)) {
+      // AuthContext Check
+      if (!this.checkAuthContext(params.security, req)) {
           // Unauthorized user
           this.setError(403000, req);
           next(`The API Provided is not authorized to access this resource`);
@@ -159,6 +186,15 @@ class ReqUtils {
         next(`Required parameters [${reqParams}] are missing from this request.`);
         return;
       }
+
+      // Site Permissions Check
+      if (!this.checkSitePermissions(req)) {
+          // Unauthorized user
+          this.setError(403000, req);
+          next(`The API Provided is not authorized to access this resource`);
+          return;
+      }
+
       // Set default values for optional params
       this.handleDefaults(sepParams.optional, req);
 
