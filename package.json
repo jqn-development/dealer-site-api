@@ -2,7 +2,7 @@
   "name": "dealer-site-api",
   "version": "1.0.0",
   "description": "An ExpressJS REST API to interface with Dealer info and Vehicle inventory data hosted in AWS RDS",
-  "main": "app/server.js",
+  "main": "app.js",
   "scripts": {
     "test": "mocha",
     "build": "gulp",

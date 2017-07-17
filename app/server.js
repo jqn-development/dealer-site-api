@@ -1,9 +1,8 @@
-// server.js
+// app/server.js
 
 // Dependencies
 const
   _                   = require('./lib/lodashExt')
-  , fs                = require('fs')
   , http              = require('http')
   , https             = require('https')
   , moment            = require('moment')
@@ -12,7 +11,6 @@ const
   , express           = require('express')
   , bodyParser        = require('body-parser')
 
-  , Logger            = require('./lib/logger')
   , DBConn            = require('./lib/dbconn')
   , respCodes         = require('./lib/respCodes')
   , Cache             = require('./lib/cache')
@@ -27,58 +25,39 @@ let server = {};
 //  Server Class
 // ***************************************************************************/
 class Server {
-  constructor(config) {
+  constructor(config, log) {
     this.app = express();  // Setup Express
     this.server = {};
     this.config = config;
     this.port = config.server.port || 8080;  // Configure the port number
 
-    this.logger = {};
-    this.log = {};
+    this.log = log;
     this.dbconn = null;
     this.cache = null;
 
     this.router = {};
     this.models = {};
     this.controllers = {};
-    this.cli = false;
   }
 
   // ****************************************************************************
   //  Server Shutdown Logic
   // ***************************************************************************/
-  handleSIGTERM() {
-   this.close(15);
-  }
-
-  handleSIGINT() {
-    this.close(2);
-  }
-
-  close(code) {
-    let sigCode;
-    code = code || 0;
-    switch (code) {
-      case 2:
-        sigCode = 'SIGINT';
-        break;
-      case 15:
-        sigCode = 'SIGTERM';
-        break;
-      default:
-        sigCode = code;
-        break;
+  close() {
+    // Perform gracful shutdown here
+    if (_.hasValue(this.cache)) {
+      this.log.info(`Closing connection to Redis Cache`);
+      this.cache.close();
     }
 
-    // Perform gracful shutdown here
-    this.log.info(`Received exit code ${sigCode}, performing graceful shutdown`);
-    if (_.hasValue(this.cache)) this.cache.close();     // Close Redis Connection
-    if (_.hasValue(this.dbconn)) this.dbconn.close();     // Close DB Connection
-    if (_.hasValue(this.server)) this.server.close();     // Close HTTP Server
+    if (_.hasValue(this.dbconn)) {
+      this.log.info(`Closing connection to Database`);
+      this.dbconn.close();
+    }
 
-    // Only end the process if this was started on the command line
-    if (this.cli) {
-      process.exit(code);
+    if (_.hasValue(this.server)) {
+      this.log.info(`Shutting down HTTP listener`);
+      this.server.close();
     }
   }
 
@@ -165,24 +144,9 @@ class Server {
   // Server Initialization Logic
   // ***************************************************************************/
   init() {
-    // Setup graceful exit for SIGTERM and SIGINT
-    process.on('SIGTERM', this.handleSIGTERM.bind(this));
-    process.on('SIGINT', this.handleSIGINT.bind(this));
-
-    this.setupLogging();
     this.setupDBConnection();
     this.setupCache();
     this.setupServer(this.app);
-  }
-
-  setupLogging() {
-    // Create log folder if it does not already exist
-    if (!fs.existsSync(config.logging.logDir)) {
-      console.log('Creating log folder');
-      fs.mkdirSync(config.logging.logDir);
-    }
-    this.logger = new Logger(config);
-    this.log = this.logger.log;
   }
 
   setupDBConnection() {
@@ -235,14 +199,6 @@ class Server {
     this.server = app.listen(this.port)
     this.log.info('Listening on port ' + this.port);
   }
-}
-
-// Check how the server was invoked -- in theory, we will only get here if this has been invoked on the CLI but double check
-if (require.main === module) {
-  // Invoked from Command Line
-  server = new Server(config);
-  server.init();
-  server.cli = true;
 }
 
 module.exports = Server;
