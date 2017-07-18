@@ -51,10 +51,20 @@ let codes = {
     'message': 'The credentials provided are not authorized for this request',
     'status': 403,
   },
+  [403001]: {
+    'summary': 'Forbidden',
+    'message': 'Cannot target the same API Key used to make this request',
+    'status': 403,
+  },
   [404000]: {
     'summary': 'Not Found',
     'message': 'The requested resource does not exist or you are not authorized to access it.',
     'status': 404,
+  },
+  [500000]: {
+    'summary': 'Could Not Connect',
+    'message': 'The server connection timed out',
+    'status': 500
   },
   [500001]: {
     'summary': 'General Server Error',
