@@ -110,7 +110,7 @@ class DynamicFieldController {
           reqUtils.setError(400002);
           next(`The field with label:'${req.locals.fieldLabel}' belonging to the 'dealerID': ${req.locals.dealerID} does not exist.`);
         } else {
-          reqUtils.setData(field.dataValues);
+          reqUtils.setData({message: `Field '${req.locals.fieldLabel}' successfully updated.`});
           next();
         }
       })
