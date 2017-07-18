@@ -173,11 +173,11 @@ class AdminController {
     },
     (req, res, next) => {
       let obj = req.locals;
-      this.modelSite.update(obj, { where: { siteID: req.local.siteID } } )
+      this.modelSite.update(obj, { where: { siteID: req.locals.siteID } } )
       .then((site) => {
         if (!site) {
           reqUtils.setError(500002);
-          next(`The new site could not be created.`);
+          next(`The new site could not be updated.`);
         } else {
           reqUtils.setData(site);
           next();
@@ -313,7 +313,9 @@ class AdminController {
   getPermissions(req, res, next) {
     let reqUtils = new ReqUtils(req);
 
+    // TODO: Handle retrieving permissions from targetAPIKey
     reqUtils.handleRequest({
+      // targetAPIKey: { type: 'apikey', source: ['body', 'headers', 'query'] }
       params: {},
       security: { super: true, server: true }
     },
