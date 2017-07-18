@@ -70,6 +70,44 @@ class AdminController {
   // =======================================================
   //
   // =======================================================
+  deleteAPIKey(req, res, next) {
+    let reqUtils = new ReqUtils(req);
+
+    reqUtils.handleRequest({
+      params: {
+        targetAPIKey: { type: 'apikey', source: ['body', 'headers', 'query'], required: true },
+      },
+      security: { super: true, server: true }
+    },
+    (req, res, next) => {
+      let obj = {};
+      obj.isDeleted = true;
+      if (req.locals.targetAPIKey !== req.apiKey) {
+        this.model.update(obj, { where: { apiKey: req.locals.targetAPIKey, aclID: { $gt: 2 } } })
+        .then((acl) => {
+          if (!acl) {
+            reqUtils.setError(500002);
+            next(`The APIKey(${req.locals.targetAPIKey}) could not be deleted.`);
+          } else {
+            reqUtils.setData({ message: `APIKey(${req.locals.siteID}) was deleted.` });
+            next();
+          }
+        })
+        .catch((err) => {
+          reqUtils.setError(500001);
+          next(err);
+        });
+      } else {
+        reqUtils.setError(403001);
+        next(`Souce and Target APIKey can not be identical`);
+      }
+    }, next, res);
+
+  }
+
+  // =======================================================
+  //
+  // =======================================================
   createSite(req, res, next) {
     let reqUtils = new ReqUtils(req);
 

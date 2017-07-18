@@ -9,6 +9,9 @@ module.exports = function(app, controllers, log) {
   // admin Create API Key
   app.post('/admin/createAPIKey', controllers.AdminController.createAPIKey.bind(controllers.AdminController));
 
+  // admin Delete API Key
+  app.post('/admin/deleteAPIKey', controllers.AdminController.deleteAPIKey.bind(controllers.AdminController));
+
   // admin Create Site
   app.post('/admin/createSite', controllers.AdminController.createSite.bind(controllers.AdminController));
   app.post('/admin/createSite/:dealerID', controllers.AdminController.createSite.bind(controllers.AdminController));
