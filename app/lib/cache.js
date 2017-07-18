@@ -18,19 +18,33 @@ class Cache {
     this.isConnected = false;
     this.cacheConfig = config.cache;
     this.creds = config.credentials.redis;
+    this.cache = null;
+    this.logger = logger;
+  }
+
+  // Returns a promise that signifies when the connection to the cache is ready
+  connect() {
     this.cache = redis.createClient(this.creds.port, this.creds.host, this.cacheConfig);
-    this.cache.on('ready', () => {
-      logger.info('Cache Connected');
-      this.isConnected = true;
+    return new Promise((resolve, reject) => {
+      this.cache.on('connect', () => {
+        this.logger.info('Cache Connected');
+        this.isConnected = true;
+        resolve(this.cache);
+      });
+      this.cache.on('error', (err) => {
+        reject(err);
+      });
     });
   }
 
   get(key) {
-    return this.cache.getAsync(key); // returns a Promise
+    if (this.isConnected) return this.cache.getAsync(key); // returns a Promise
+    else throw (new Error('Cache is not connected'));
   }
 
   set(key, value) {
-    return this.cache.setAsync(key, value); // returns a Promise
+    if (this.isConnected) return this.cache.setAsync(key, value); // returns a Promise
+    else throw (new Error('Cache is not connected'));
   }
 
   calcObjKey(objKey) {
@@ -50,11 +64,30 @@ class Cache {
 
   // Clear the Redis Cache
   clear() {
-    return this.cache.flushdbAsync(); // returns a Promise
+    if (this.isConnected) return this.cache.flushdbAsync(); // returns a Promise
+    else throw (new Error('Cache is not connected'));
   }
 
   close() {
-    if (_.hasValue(this.cache)) this.cache.quit();
+    let p;
+    if (this.isConnected) {
+      this.cache.quit();
+      p = new Promise((resolve, reject) => {
+        this.cache.on('end', () => {
+          this.logger.info('Cache Closed');
+          this.isConnected = false;
+          resolve(this.cache);
+        });
+        this.cache.on('error', (err) => {
+          reject(err);
+        });
+      });
+    } else {
+      p = new Promise((resolve, reject) => {
+        reject('Cache connection is not active');
+      });
+    }
+    return p;
   }
 }
 

@@ -159,6 +159,7 @@ class Server {
 
   setupCache() {
     this.cache = new Cache(this.config, this.log);
+    this.cache.connect();
   }
 
   setupServer(app) {
