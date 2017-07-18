@@ -19,6 +19,7 @@ class Dealer {
         city:                           { type: sequelize.STRING(100), allowsNulls: false },
         regionCode:                     { type: sequelize.STRING(3), allowsNulls: false },
         postalCode:                     { type: sequelize.STRING(10), allowsNulls: false },
+        countryCode:                    { type: sequelize.STRING(3), allowsNulls: false, defaultValue: 'US' },
         phone:                          { type: sequelize.STRING(15), allowsNulls: false },
         phoneExt:                       { type: sequelize.STRING(20), allowsNulls: true },
         phoneCountryCode:               { type: sequelize.STRING(4), allowsNulls: false, defaultValue: 1 },
