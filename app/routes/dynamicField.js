@@ -7,7 +7,7 @@ const
 module.exports = function(app, controllers, log) {
 
   // Field READ (*)
-  app.get('/vehicle/all', controllers.DynamicFieldController.list.bind(controllers.DynamicFieldController));
+  app.get('/field/all', controllers.DynamicFieldController.list.bind(controllers.DynamicFieldController));
 
   // Field READ
   app.get('/field', controllers.DynamicFieldController.read.bind(controllers.DynamicFieldController));
