@@ -64,7 +64,7 @@ class VehicleController {
       params: {
         dealerID: { type: 'int', source: ['body', 'headers', 'query'], required: true },
         page: { type: 'int', source: ['params', 'body', 'headers', 'query'], required: false, default: (v) => { return Number((v < 1) ? 1 : (v || 1)) } },
-        limit: { type: 'int', source: ['params', 'body', 'headers', 'query'], required: false, default: (v) => { return Number((v < 1) ? 1 : (v || 1)) } },
+        limit: { type: 'int', source: ['params', 'body', 'headers', 'query'], required: false, default: (v) => { return Number((v < 1) ? 1 : (v || 20)) } },
       },
       security: { client: true }
     },
