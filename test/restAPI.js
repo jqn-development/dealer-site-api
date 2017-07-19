@@ -105,13 +105,22 @@ describe('REST Endpoint Tests', () => {
   // Admin Pre-Tests
   // =============================================================
   describe('Admin Controller Pre-Tests', () => {
-    before(async() => {
+    before((done) => {
       // Retrieve the primary key for testing
-      let results = await server.dbconn.conn.query('SELECT apiKey, secretKey FROM acl WHERE aclID = 1 LIMIT 1', { type: server.dbconn.conn.QueryTypes.SELECT });
-      if (results) {
-        superTestCreds.apiKey = uuidAPIKey.toAPIKey(results[0].apiKey);
-        superTestCreds.secret = results[0].secretKey;
-      }
+      server.dbconn.conn.query('SELECT apiKey, secretKey FROM acl WHERE aclID = 1 LIMIT 1', { type: server.dbconn.conn.QueryTypes.SELECT })
+      .then((results) => {
+        if (results) {
+          superTestCreds.apiKey = uuidAPIKey.toAPIKey(results[0].apiKey);
+          superTestCreds.secret = results[0].secretKey;
+          done();
+        } else {
+          done('Could not retrieve admin credentials');
+          process.exit(1);
+        }
+      })
+      .catch((err) => {
+        done(err);
+      });
     });
 
     it('checking createAPIKey POST (/site/admin/createAPIKey', (done) => {
@@ -287,7 +296,6 @@ describe('REST Endpoint Tests', () => {
   // Field Controller Tests
   // =============================================================
   describe('Field Controller', () => {
-    // TODO: Test - Add Field routes
     it('checking field POST (/site/field) w/ wrong security context', (done) => {
       request(svr)
         .post('/site/field')
