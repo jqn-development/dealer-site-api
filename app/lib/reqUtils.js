@@ -140,6 +140,7 @@ class ReqUtils {
   // Expects an object containing the value and types for each named key
   // e.g. { dealerID: { value: 100, type: 'int' } }
   // Returns the array of non-matching values
+  // FIXME -- There is a bug when a default value is provided in the params and the values are mismatched types, it makes the 'handler' appear to be undefined
   validateParams(params) {
     let test = [];
     let current;
