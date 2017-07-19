@@ -89,18 +89,6 @@ class ReqUtils {
     }
   }
 
-  hasRequiredParams(params) {
-    // Check Required parameters
-    params = params || {};
-    let reqParams = [];
-    let current;
-    for (let key in params) {
-      current = params[key];
-      if (_.isUnset(params[key])) reqParams.push(key);
-    }
-    return reqParams;
-  }
-
   compileRequiredParams(params) {
     // Compile required parameters into a check array
     params = params || {};
@@ -118,8 +106,21 @@ class ReqUtils {
     return { required: reqParams, optional: optParams };
   }
 
+  hasRequiredParams(params) {
+    // Check Required parameters
+    params = params || {};
+    let reqParams = [];
+    let current;
+    for (let key in params) {
+      current = params[key];
+      if (_.isUnset(params[key])) reqParams.push(key);
+    }
+    return reqParams;
+  }
+
   // Looks for keys in the req.locals, if they are not set then it sets a default value
   handleDefaults(params, req) {
+    req = req || this.req;
     let current;
     for (let key in params) {
       current = params[key];
