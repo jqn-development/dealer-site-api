@@ -28,7 +28,7 @@ function validate(value, type, options) {
       test = validator.isUUID(value.toString());
       break;
     case 'url':
-      test.validator.isURL(value.toString(), options);
+      test = validator.isURL(value.toString(), options);
       break;
     case 'fqdn':
       test = validator.isFQDN(value.toString(), options);
