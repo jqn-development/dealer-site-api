@@ -39,8 +39,8 @@ class Logger {
           awsSecretKey: config.credentials.aws.secretAccessKey,
           awsRegion: config.credentials.aws.region,
           logGroupName: config.cloudwatch.logGroupName,
-          logStreamName: config.cloudwatch.logStreamName,
-          messageFormatter: this.formatter
+          logStreamName: config.cloudwatch.logStreamName
+          //messageFormatter: this.formatter
         })
       );
     }
@@ -49,6 +49,16 @@ class Logger {
     if ((process.env.NODE_ENV !== 'production') && (process.env.NODE_ENV !== 'test')) {
       transports.push(
         new (winston.transports.Console) ({
+          level: 'debug',
+          formatter: this.formatter
+        })
+      );
+
+      transports.push(
+        new (winston.transports.File) ({
+          filename: this.logDir + '/debug.log',
+          name: 'debug-log',
+          level: 'debug',
           formatter: this.formatter
         })
       );

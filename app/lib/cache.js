@@ -27,7 +27,7 @@ class Cache {
     this.cache = redis.createClient(this.creds.port, this.creds.host, this.cacheConfig);
     return new Promise((resolve, reject) => {
       this.cache.on('connect', () => {
-        this.logger.info('Cache Connected');
+        this.logger.debug('Cache Connected');
         this.isConnected = true;
         resolve(this.cache);
       });
@@ -74,7 +74,7 @@ class Cache {
       this.cache.quit();
       p = new Promise((resolve, reject) => {
         this.cache.on('end', () => {
-          this.logger.info('Cache Closed');
+          this.logger.debug('Cache Closed');
           this.isConnected = false;
           resolve(this.cache);
         });

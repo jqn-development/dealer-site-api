@@ -18,14 +18,14 @@ let controllers = {};
  */
 
 module.exports = (dbconn, models, cache, log) => {
-   log.info("Loading controllers...");
+   log.debug("Loading controllers...");
    fs.readdirSync(__dirname)
      .filter(function(file) {
        return (file.substr(-3) === '.js') && (file.indexOf(".") !== 0) && (file !== "index.js");
      })
      .forEach(function(file) {
        cls = require(path.join(__dirname, file));
-       log.info(`Loading controller: '${cls.name}'`);
+       log.debug(`Loading controller: '${cls.name}'`);
        controllers[cls.name] = new cls(dbconn, models, cache, log);
      });
    return controllers;

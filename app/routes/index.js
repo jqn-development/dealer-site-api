@@ -17,14 +17,14 @@ const
  */
 
 function loadRoutes(app, controllers, log) {
-  log.info("Loading Routes...");
+  log.debug("Loading Routes...");
   fs.readdirSync(__dirname)
     .filter(function(file) {
       return (file.substr(-3) === '.js') && (file.indexOf(".") !== 0) && (file !== "index.js");
     })
     .forEach(function(file) {
       let name = file.substr(0, file.indexOf('.'));
-      log.info(`Loading Route: '${name}'`);
+      log.debug(`Loading Route: '${name}'`);
       require(path.join(__dirname, file))(app, controllers, log);
     });
 }

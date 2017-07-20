@@ -23,15 +23,15 @@ class DBConn {
       port: this.creds.port,
       dialect: 'mysql',
       pool: this.dbconf.pool,
-      logging: logger.info
+      logging: logger.debug
     });
   }
 
   connect() {
-    this.log.info('Testing connection...');
+    this.log.debug('Testing connection...');
     return this.conn.authenticate()
       .then(() => {
-        this.log.info('Connection has been established successfully.');
+        this.log.debug('Connection has been established successfully.');
         this.isConnected = true;
       })
       .catch(err => {

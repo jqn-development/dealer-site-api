@@ -18,14 +18,14 @@ let model = {};
  */
 
 module.exports = (log) => {
-  log.info("Loading data models...");
+  log.debug("Loading data models...");
   fs.readdirSync(__dirname)
     .filter(function(file) {
       return (file.substr(-3) === '.js') && (file.indexOf(".") !== 0) && (file !== "index.js");
     })
     .forEach(function(file) {
       cls = require(path.join(__dirname, file));
-      log.info(`Loading model: '${cls.name}'`);
+      log.debug(`Loading model: '${cls.name}'`);
       model[cls.name] = cls;
     });
   return model;

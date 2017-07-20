@@ -50,17 +50,17 @@ class Server {
   close() {
     // Perform gracful shutdown here
     if (_.hasValue(this.cache)) {
-      this.log.info(`Closing connection to Redis Cache`);
+      this.log.debug(`Closing connection to Redis Cache`);
       this.cache.close();
     }
 
     if (_.hasValue(this.dbconn)) {
-      this.log.info(`Closing connection to Database`);
+      this.log.debug(`Closing connection to Database`);
       this.dbconn.close();
     }
 
     if (_.hasValue(this.server)) {
-      this.log.info(`Shutting down HTTP listener`);
+      this.log.debug(`Shutting down HTTP listener`);
       this.server.close();
     }
     this.isActive = false;
@@ -121,7 +121,7 @@ class Server {
 
   logErrors(err, req, res, next) {
     this.log.debug("Logging Errors");
-    this.log.error(err);
+    this.log.error(req);
     next(err);
   }
 
@@ -166,7 +166,7 @@ class Server {
   }
 
   setupServer(app) {
-    this.log.info('Starting server');
+    this.log.debug('Starting server');
 
     // configure app to use bodyParser()
     // this will let us get the data from a POST
@@ -204,7 +204,7 @@ class Server {
 
     // Start the server
     this.server = app.listen(this.port)
-    this.log.info('Listening on port ' + this.port);
+    this.log.debug('Listening on port ' + this.port);
   }
 }
 
