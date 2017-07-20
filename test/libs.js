@@ -174,14 +174,30 @@ describe('Library Tests', () => {
       test.assert(invalidParams.length > 0); // There should be at least 1 missing parameter
     });
     it('handleRequest', (done) => {
+      req.hasData = false;
+      req.securityContext.super = true;
       libTest.reqUtils.handleRequest({
-        params: reqParams,
+        params: _.omit(reqParams, ['badValidation', 'missingRequiredVar']),
         security: { super: true }
       },
-      (req,res,next) => {
-        test.assert(_.hasValue(req.locals));
-        done();
+      (r,res,next) => {
+        test.assert(_.hasValue(r.locals));
       }, done);
+      done();
+    });
+    it('handleRequest with thrown error', (done) => {
+      req.hasData = false;
+      req.securityContext.super = true;
+      libTest.reqUtils.handleRequest({
+        params: _.omit(reqParams, ['badValidation', 'missingRequiredVar']),
+        security: { super: true }
+      },
+      (r,res,next) => {
+        throw new Error('This is an error');
+      }, (err) => {
+        test.assert(req.respCode == 500001);
+      });
+      done();
     });
   });
 
