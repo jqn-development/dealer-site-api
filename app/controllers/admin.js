@@ -237,13 +237,13 @@ class AdminController {
     },
     (req, res, next) => {
       let key = req.acl.apiKey;
-      if (_.hasValue(req.locals.targetAPIKey)) key = uuidAPIKey.toUUID(req.locals.targetAPIKey);
-      this.model.find({ where: { apiKey: key }})
+      if (_.hasValue(req.locals.targetAPIKey)) key = req.locals.targetAPIKey;
+      this.model.findOne({ where: { apiKey: uuidAPIKey.toUUID(key) }})
       .then((acl) => {
         if (!acl) {
           // The API Key could not be found
           reqUtils.setError(401001);
-          next(`The API Key provided is invalid.`);
+          next(`The API Key or Target API Key provided is invalid.`);
         } else {
           let obj = { aclID: acl.aclID, siteID: req.locals.siteID };
           this.modelACLSite.create(obj)
