@@ -41,6 +41,10 @@ describe('Library Tests', () => {
     config.credentials.aws = require(__dirname + '/../config/aws.test.credentials.json');
     config.credentials.mysql = require(__dirname + '/../config/mysql.test.credentials.json');
     config.credentials.redis = require(__dirname + '/../config/redis.test.credentials.json');
+    // Load AWS credentials from environment, if they can't be found then use the values in the file
+    config.credentials.aws.accessKeyId = process.env.AWS_ACCESS_KEY || config.credentials.aws.accessKeyId;
+    config.credentials.aws.secretAccessKey = process.env.AWS_SECRET_KEY || config.credentials.aws.secretAccessKey;
+    config.credentials.aws.region = process.env.AWS_REGION || config.credentials.aws.region;
   });
 
   after(() => {

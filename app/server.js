@@ -14,12 +14,11 @@ const
   , DBConn            = require('./lib/dbconn')
   , respCodes         = require('./lib/respCodes')
   , Cache             = require('./lib/cache')
-
-  , config            = require('../config/config')
 ;
 
 let server = {};
 
+// TODO: Add Timeout error handling
 // ****************************************************************************
 //  Server Class
 // ***************************************************************************/
@@ -28,6 +27,11 @@ class Server {
     this.app = express();  // Setup Express
     this.server = {};
     this.config = config;
+    // Load AWS credentials from environment, if they can't be found then use the values in the file
+    this.config.credentials.aws.accessKeyId = process.env.AWS_ACCESS_KEY || this.config.credentials.aws.accessKeyId;
+    this.config.credentials.aws.secretAccessKey = process.env.AWS_SECRET_KEY || this.config.credentials.aws.secretAccessKey;
+    this.config.credentials.aws.region = process.env.AWS_REGION || this.config.credentials.aws.region;
+    // Set the default port number
     this.port = config.server.port || 8080;  // Configure the port number
     this.isActive = false;
 

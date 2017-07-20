@@ -17,6 +17,7 @@ let
  *
  */
 
+process.env.NODE_ENV = 'production';  // Set the environment to testing
 console.log("Loading Tests...");
 fs.readdirSync(__dirname)
   .filter(function(file) {
