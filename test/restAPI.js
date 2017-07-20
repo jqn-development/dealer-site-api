@@ -20,7 +20,7 @@ let testCreds = {
   secret: 'ZEM0H3A-W9TBS2P-37EBAPQ'
 }
 
-let superTestCreds = {};
+let superTestCreds;
 let testDealer = -1;
 let testVehicle = -1;
 
@@ -93,6 +93,12 @@ describe('REST Endpoint Tests', () => {
         .get('/site/')
         .expect(401, done);
     });
+    it('checking root (/site/) w/ bad apikey', (done) => {
+      request(svr)
+        .get('/site/')
+        .query({ apiKey: 'XUXUXUX-XXXXXXX-XXXXXXX' })
+        .expect(401, done);
+    });
     it('checking root (/site/) w/ authorization', (done) => {
       request(svr)
         .get('/site/')
@@ -110,8 +116,10 @@ describe('REST Endpoint Tests', () => {
       server.dbconn.conn.query('SELECT apiKey, secretKey FROM acl WHERE aclID = 1 LIMIT 1', { type: server.dbconn.conn.QueryTypes.SELECT })
       .then((results) => {
         if (results) {
-          superTestCreds.apiKey = uuidAPIKey.toAPIKey(results[0].apiKey);
-          superTestCreds.secret = results[0].secretKey;
+          superTestCreds = {
+            apiKey: uuidAPIKey.toAPIKey(results[0].apiKey),
+            secret: results[0].secretKey
+          }
           done();
         } else {
           done('Could not retrieve admin credentials');
@@ -162,7 +170,17 @@ describe('REST Endpoint Tests', () => {
       request(svr)
         .post('/site/admin/grantSitePermissions')
         .send({ apiKey: superTestCreds.apiKey, secret: superTestCreds.secret, targetAPIKey: testCreds.apiKey, siteID: targetSiteID })
-        .expect(200, done);
+        .then((res) => {
+          if (res.status != 200) {
+            console.log(superTestCreds);
+            console.log(res.body);
+          }
+          assert(res.status == 200);
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        })
     });
     it('checking getPermissions POST (/site/admin/getPermissions)', (done) => {
       request(svr)
@@ -266,11 +284,23 @@ describe('REST Endpoint Tests', () => {
           done(err);
         });
     });
+    it('checking config GET (/site/config) w/ wrong siteID', (done) => {
+      request(svr)
+        .get('/site/config')
+        .query({ apiKey: superTestCreds.apiKey, siteID: -1 })
+        .expect(400, done);
+    });
     it('checking config PUT (/site/config) w/ wrong security context', (done) => {
       request(svr)
         .put('/site/config')
         .send({ apiKey: testCreds.apiKey, siteID: targetSiteID, title: 'New Site' })
         .expect(403, done);
+    });
+    it('checking config PUT (/site/config) w/ wrong siteID', (done) => {
+      request(svr)
+        .put('/site/config')
+        .send({ apiKey: superTestCreds.apiKey, secret: superTestCreds.secret, siteID: -1, title: 'New Site' })
+        .expect(400, done);
     });
     it('checking config PUT (/site/config)', (done) => {
       request(svr)
