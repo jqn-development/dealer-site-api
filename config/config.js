@@ -29,6 +29,6 @@ module.exports = {
   },
   'cloudwatch': {
     'logGroupName': 'website-api',
-    'logStreamName': 'requests'
+    'logStreamName': 'local-dev'
   }
 }
