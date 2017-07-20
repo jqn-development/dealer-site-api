@@ -22,12 +22,14 @@ class RootController {
   handleRoot(req, res, next) {
     let reqUtils = new ReqUtils(req);
 
-    if (!reqUtils.hasResponse()) {
+    reqUtils.handleRequest({
+      params: { },
+      security: { }
+    },
+    (req, res, next) => {
       reqUtils.setData({ message: 'It works!' });
       next();
-    } else {
-      next();
-    }
+    }, next, res);
   }
 }
 
