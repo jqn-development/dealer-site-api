@@ -24,6 +24,43 @@ let superTestCreds;
 let testDealer = -1;
 let testVehicle = -1;
 
+async function teardownData(server) {
+  let r;
+  // Cleanup Test Data
+  r = await server.dbconn.conn.query('DELETE FROM vehicle WHERE vehicleID < 1', { type: server.dbconn.conn.QueryTypes.DELETE });
+  r = await server.dbconn.conn.query('DELETE FROM dealer WHERE dealerID < 1', { type: server.dbconn.conn.QueryTypes.DELETE });
+}
+
+async function stageData(server) {
+  let r;
+  await teardownData(server);
+  // Add dealer and vehicle test data to database so can test updating
+  r = await server.dbconn.conn.query('INSERT INTO dealer (dealerID, dealerName, address, city, regionCode, postalCode, phone) VALUES (-1, \'Test Dealer\', \'1234 Winding Way\', \'Broomfield\', \'CO\', \'81234\', \'8005551234\')', { type: server.dbconn.conn.QueryTypes.INSERT });
+  r = await server.dbconn.conn.query(
+    'INSERT INTO vehicle (vehicleID, dealerID, stockNumber, vin, year, make, model, mileage, vehicleType) VALUES ' +
+    '(-1, -1, \'A\', \'A\', 2017, \'Honda\', \'Indifference\', 10, \'Space Wagon\'),' +
+    '(-2, -1, \'B\', \'B\', 2017, \'Ford\', \'Exorbitant\', 10, \'Space Wagon\'),' +
+    '(-3, -1, \'C\', \'C\', 2017, \'Chrysler\', \'Mediocrity\', 10, \'Space Wagon\'),' +
+    '(-4, -1, \'D\', \'D\', 2017, \'Dodge\', \'Breakdown\', 10, \'Space Wagon\'),' +
+    '(-5, -1, \'E\', \'E\', 2017, \'Hyundai\', \'Thrifty\', 10, \'Space Wagon\'),' +
+    '(-6, -1, \'F\', \'F\', 2017, \'Jeep\', \'Nationalism\', 10, \'Space Wagon\'),' +
+    '(-7, -1, \'G\', \'G\', 2017, \'Range Rover\', \'Escapism\', 10, \'Space Wagon\'),' +
+    '(-8, -1, \'H\', \'H\', 2017, \'BMW\', \'Entitlement\', 10, \'Space Wagon\'),' +
+    '(-9, -1, \'I\', \'I\', 2017, \'Mini\', \'Mote\', 10, \'Sub-Compact\'),' +
+    '(-10, -1, \'J\', \'J\', 2017, \'SaaB\', \'Sorrow\', 10, \'Space Wagon\'),' +
+    '(-11, -1, \'K\', \'K\', 2017, \'Telsa\', \'Futuristic\', 10, \'Space Wagon\'),' +
+    '(-12, -1, \'L\', \'L\', 2017, \'Nissan\', \'Nihlism\', 10, \'Space Wagon\'),' +
+    '(-13, -1, \'M\', \'M\', 2017, \'Toyota\', \'Prion Disease\', 10, \'Space Wagon\'),' +
+    '(-14, -1, \'N\', \'N\', 2017, \'Suburu\', \'Settlement\', 10, \'Space Wagon\'),' +
+    '(-15, -1, \'O\', \'O\', 2017, \'Lincoln\', \'Island\', 10, \'Space Wagon\'),' +
+    '(-16, -1, \'P\', \'P\', 2017, \'Daiwoo\', \'Indeterminate\', 10, \'Space Wagon\'),' +
+    '(-17, -1, \'Q\', \'Q\', 2017, \'Lexus\', \'Nouveau Riche\', 10, \'Space Wagon\'),' +
+    '(-18, -1, \'R\', \'R\', 2017, \'Kia\', \'Soulless\', 10, \'Space Wagon\'),' +
+    '(-19, -1, \'S\', \'S\', 2017, \'Buick\', \'Irregular\', 10, \'Space Wagon\'),' +
+    '(-20, -1, \'T\', \'T\', 2017, \'Mercedes\', \'Billfold\', 10, \'Space Wagon\')'
+    , { type: server.dbconn.conn.QueryTypes.INSERT });
+}
+
 describe('REST Endpoint Tests', () => {
   let Server, server, svr, log, results, targetSiteID;
   process.env.NODE_ENV = 'production';  // Set the environment to testing
@@ -38,51 +75,28 @@ describe('REST Endpoint Tests', () => {
     config.credentials.redis = require(__dirname + '/../config/redis.test.credentials.json');
     // Run on a different port to prevent collisions when testing locally
     config.server.port = 8888;
-    server = new Server(config, log);
-    server.init();
-    svr = server.server;
-
-    // Pre-Cleanup Test Data
-    results = await server.dbconn.conn.query('DELETE FROM vehicle WHERE vehicleID < 1', { type: server.dbconn.conn.QueryTypes.DELETE });
-    results = await server.dbconn.conn.query('DELETE FROM dealer WHERE dealerID < 1', { type: server.dbconn.conn.QueryTypes.DELETE });
-    // Add dealer and vehicle test data to database so can test updating
-    results = await server.dbconn.conn.query('INSERT INTO dealer (dealerID, dealerName, address, city, regionCode, postalCode, phone) VALUES (-1, \'Test Dealer\', \'1234 Winding Way\', \'Broomfield\', \'CO\', \'81234\', \'8005551234\')', { type: server.dbconn.conn.QueryTypes.INSERT });
-    results = await server.dbconn.conn.query(
-      'INSERT INTO vehicle (vehicleID, dealerID, stockNumber, vin, year, make, model, mileage, vehicleType) VALUES ' +
-      '(-1, -1, \'A\', \'A\', 2017, \'Honda\', \'Indifference\', 10, \'Space Wagon\'),' +
-      '(-2, -1, \'B\', \'B\', 2017, \'Ford\', \'Exorbitant\', 10, \'Space Wagon\'),' +
-      '(-3, -1, \'C\', \'C\', 2017, \'Chrysler\', \'Mediocrity\', 10, \'Space Wagon\'),' +
-      '(-4, -1, \'D\', \'D\', 2017, \'Dodge\', \'Breakdown\', 10, \'Space Wagon\'),' +
-      '(-5, -1, \'E\', \'E\', 2017, \'Hyundai\', \'Thrifty\', 10, \'Space Wagon\'),' +
-      '(-6, -1, \'F\', \'F\', 2017, \'Jeep\', \'Nationalism\', 10, \'Space Wagon\'),' +
-      '(-7, -1, \'G\', \'G\', 2017, \'Range Rover\', \'Escapism\', 10, \'Space Wagon\'),' +
-      '(-8, -1, \'H\', \'H\', 2017, \'BMW\', \'Entitlement\', 10, \'Space Wagon\'),' +
-      '(-9, -1, \'I\', \'I\', 2017, \'Mini\', \'Mote\', 10, \'Sub-Compact\'),' +
-      '(-10, -1, \'J\', \'J\', 2017, \'SaaB\', \'Sorrow\', 10, \'Space Wagon\'),' +
-      '(-11, -1, \'K\', \'K\', 2017, \'Telsa\', \'Futuristic\', 10, \'Space Wagon\'),' +
-      '(-12, -1, \'L\', \'L\', 2017, \'Nissan\', \'Nihlism\', 10, \'Space Wagon\'),' +
-      '(-13, -1, \'M\', \'M\', 2017, \'Toyota\', \'Prion Disease\', 10, \'Space Wagon\'),' +
-      '(-14, -1, \'N\', \'N\', 2017, \'Suburu\', \'Settlement\', 10, \'Space Wagon\'),' +
-      '(-15, -1, \'O\', \'O\', 2017, \'Lincoln\', \'Island\', 10, \'Space Wagon\'),' +
-      '(-16, -1, \'P\', \'P\', 2017, \'Daiwoo\', \'Indeterminate\', 10, \'Space Wagon\'),' +
-      '(-17, -1, \'Q\', \'Q\', 2017, \'Lexus\', \'Nouveau Riche\', 10, \'Space Wagon\'),' +
-      '(-18, -1, \'R\', \'R\', 2017, \'Kia\', \'Soulless\', 10, \'Space Wagon\'),' +
-      '(-19, -1, \'S\', \'S\', 2017, \'Buick\', \'Irregular\', 10, \'Space Wagon\'),' +
-      '(-20, -1, \'T\', \'T\', 2017, \'Mercedes\', \'Billfold\', 10, \'Space Wagon\')'
-      , { type: server.dbconn.conn.QueryTypes.INSERT });
-
   });
-  after(async () => {
-    // Cleanup Test Data
-    results = await server.dbconn.conn.query('DELETE FROM vehicle WHERE vehicleID < 1', { type: server.dbconn.conn.QueryTypes.DELETE });
-    results = await server.dbconn.conn.query('DELETE FROM dealer WHERE dealerID < 1', { type: server.dbconn.conn.QueryTypes.DELETE });
 
-    server.close();
-  })
+  after(() => {});
 
-  it('server load', () => {
+  it('constructor', () => {
+    server = new Server(config, log);
     test.assert(server instanceof Server);
-  })
+  });
+
+  it('server init', async () => {
+    server.init();
+    await stageData(server);
+    svr = server.server;
+    test.assert(server.isActive);
+  });
+
+  it('404 Non-existant Endpoint', (done) => {
+    request(svr)
+      .get('/test/')
+      .query({ apiKey: badTestCreds.apiKey })
+      .expect(404, done);
+  });
 
   // =============================================================
   // Root Controller Tests
@@ -434,4 +448,11 @@ describe('REST Endpoint Tests', () => {
     });
   });
 
+  describe('Server Cleanup', () => {
+    it('shutdown', async () => {
+      await teardownData(server);
+      server.close();
+      test.assert(server.isActive == false);
+    });
+  });
 });
