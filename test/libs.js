@@ -10,6 +10,7 @@ let
   , Cache             = require('../app/lib/cache')
   , Logger            = require('../app/lib/logger')
   , ReqUtils          = require('../app/lib/reqUtils')
+  , validate          = require('../app/lib/validate')
 ;
 
 let req = {
@@ -20,6 +21,7 @@ let req = {
   query: { queryVar: '1234', multiVar: '1234', wrongSrcVar: '1234' }
 };
 
+// TODO: Add a test case with a bad validation but a default value function
 let reqParams = {
   paramVar: { type: 'int', required: true, source: ['params'] },
   bodyVar: { type: 'string', required: true, source: ['body'] },
@@ -304,6 +306,66 @@ describe('Library Tests', () => {
        .catch((err) => {
          done(err);
        })
+    });
+  });
+
+  // ========================================================================
+  // Validator Wrapper
+  // ========================================================================
+  describe('Validator Wrapper', () => {
+    it('validate int (good)', () => {
+      test.assert(validate('1234', 'int'));
+    });
+    it('validate int (bad)', () => {
+      test.assert(!validate('qwer', 'int'));
+    });
+    it('validate float (good)', () => {
+      test.assert(validate('12.34e03', 'float'));
+    });
+    it('validate float (bad)', () => {
+      test.assert(!validate('qwer', 'float'));
+    });
+    it('validate boolean (good)', () => {
+      test.assert(validate('true', 'boolean'));
+    });
+    it('validate boolean (bad)', () => {
+      test.assert(!validate('qwer', 'boolean'));
+    });
+    it('validate email (good)', () => {
+      test.assert(validate('test@example.com', 'email'));
+    });
+    it('validate email (bad)', () => {
+      test.assert(!validate('qwer', 'email'));
+    });
+    it('validate currency (good)', () => {
+      test.assert(validate('$12.34', 'currency'));
+    });
+    it('validate currency (bad)', () => {
+      test.assert(!validate('qwer', 'currency'));
+    });
+    it('validate uuid (good)', () => {
+      test.assert(validate('60212ca3-9208-4d62-a338-68c7e53145e4', 'uuid'));
+    });
+    it('validate uuid (bad)', () => {
+      test.assert(!validate('qwer', 'uuid'));
+    });
+    it('validate url (good)', () => {
+      test.assert(validate('http://example.com/', 'url'));
+    });
+    it('validate url (bad)', () => {
+      test.assert(!validate('qwer', 'url'));
+    });
+    it('validate fqdn (good)', () => {
+      test.assert(validate('example.com', 'fqdn'));
+    });
+    it('validate fqdn (bad)', () => {
+      test.assert(!validate('qwer', 'fqdn'));
+    });
+    it('validate apikey (good)', () => {
+      test.assert(validate('C0GJS8Z-J844TRH-MCW6HHW-WMRMBS4', 'apikey'));
+    });
+    it('validate apikey (bad)', () => {
+      test.assert(!validate('qwer', 'apikey'));
     });
   });
 
