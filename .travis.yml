@@ -26,9 +26,9 @@ deploy:
   - provider: s3
     bucket: codedeploy-website-api
     local_dir: upload
-    upload-dir: develop
+    upload-dir: dev
     on:
-      branch: dev
+      branch: develop
   secret_access_key:
     secure: 82/uxWXT9MMFGTvCK5tVViM4JGhJX/Gt+TW7z47SzbZmngOpeIRAqt3+THooOv/hvB+v5mC16EgNL4Y5QapTLnrqsTe+/YK9Sgo6XKCRz0j7spZW/rB3l5F5kNg1jWmfqHMqrMIZLvwX3DSL5ltpcAETdtOfUaTuPSh/BGzdY2DC1PglJBVwZhI5keua5fPsNHcgZPMweejvl3lriCC/JKh5dP22RBrYtbIeNHsFnfSilc7MPpi02WzrztKoOjJnpG/aIhocjwVKHDHyBf8jiXCKJpqLLOTlV5LryBVN0Tdh7vZ2+5QN1Bn4UZXbJMkybS1kAGXFQgy4NH5RuZAdsl/z5gDV/fb2h0si85z3ixL/c4yPSKM+NnoZvdfG2g1MbtY1716iacNrFFV4x+km5To2TCsGfggJQRtMmHUuUX2FqB+igLosisetLuP5qmbaeZ1jkC3DgEV481OH+cWYoQfIIQ/j4xd3zdruM3cKPCyTn6+Emm8KR1shQAZd5hvjYWgOCMc5rInj0jj3tPJ9TZdHdJNDzzlWzWaMXcmDrPmLK6GrT5My2h00qgeE3WqXBBJh3ixvLG7dNym2GblqSOBCYoSxYiP2wERKmgWCJIguvcLbYE1PLq08NR6PHqvHdK0aSyeY5zv3COgiQME+Q4G45cJ5hn1DO0EAtZ2QCho=
   access_key_id:
