@@ -24,6 +24,7 @@ deploy:
     bucket: codedeploy-website-api
     local_dir: upload
     upload-dir: prod
+    skip_cleanup: true
     on:
       branch: master
   - provider: s3
@@ -34,5 +35,6 @@ deploy:
     bucket: codedeploy-website-api
     local_dir: upload
     upload-dir: dev
+    skip_cleanup: true
     on:
       branch: develop
