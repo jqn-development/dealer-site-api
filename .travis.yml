@@ -26,5 +26,7 @@ deploy:
     upload-dir: dev
     on:
       branch: dev
-script:
-  - zip -r latest *; mkdir -p upload; latest.zip upload/latest.zip
+after_script:
+  - zip -r latest *
+  - mkdir -p upload
+  - mv latest.zip upload/latest.zip
