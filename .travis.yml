@@ -7,7 +7,7 @@ before_script:
 - npm install -g gulp-cli gulp
 script:
 - gulp
-- zip -r -q latest *
+- zip -r -q latest * -x docs logs
 - mkdir -p upload
 - mv latest.zip upload/latest.zip
 env:
