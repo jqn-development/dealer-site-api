@@ -15,18 +15,16 @@ env:
   - secure: aCsGz88Xp5bQVuL7U40LOmliUU43zOMTvKucz1UjvacfTSbnZUuGA1DSV8xySbts7teB8TY9qCUgGKeR0R8fLbtv+o5jo2TA2/aDFO3dM45v8aAYYqn4iWHHfO1lAgitokPePfIymioQHkUUaYX7MR+DH927jrhmVGZy4BIxoQFpvkAFXPZFu9A/zVSvCPnqw/CvkOCRlD8+OSw7cpP5ZloiLEeyQq6SoPIBxs9tggye/1nKHD3CuE1IGrHCrXiCSC/HhcmYVCQ9Nlmqn1MbRn9UpdtZYFwWjDd7PEvXjds7+ioNMXeiHqGaCvKFKlL+WgsO0/AXeC+bJrx9adbCk9Dba/8tU4ComACg6Q3VAiNL9oaXs1OkVGwu/OGx1oguaFDHOf8/2SHDFUoaFDpGAVfcPQpEjaM47TnqpsPdvMfLEbwikrtnvcfSCjeNpqc4Ud3ADg9pmlzE3p8zQ/pX3Xv0ft9SQ4j/0eEcs5iK3PBK1WDaaCu1PLFXpkhoTExgPN121P5jp7cVo2oNi5OuwywmY3x5qmPMR7x4xUNIN4rHHN3wJo8Yq6UWVP/+22LrKPps3jmZ4hwGfimnnKpIxnKbciSJI9fZ7XbmjyuT+Pc/Qsh8s8PhTNwwuoh+WnOoUqYbOBEdVxmZcLB+ww98p3allP833nco+6gZvt7keJg=
 deploy:
   - provider: s3
-  bucket: codedeploy-website-api
-  local_dir: upload
-  upload-dir: prod
-  on:
-    branch: master
+    bucket: codedeploy-website-api
+    local_dir: upload
+    upload-dir: prod
+    on:
+      branch: master
   - provider: s3
-  bucket: codedeploy-website-api
-  local_dir: upload
-  upload-dir: dev
-  on:
-    branch: dev
+    bucket: codedeploy-website-api
+    local_dir: upload
+    upload-dir: dev
+    on:
+      branch: dev
 script:
-  - zip -r latest *
-  - mkdir -p upload
-  - mv latest.zip upload/latest.zip
+  - zip -r latest *; mkdir -p upload; latest.zip upload/latest.zip
