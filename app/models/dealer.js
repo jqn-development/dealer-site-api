@@ -33,7 +33,9 @@ class Dealer {
         contactDirectLine:              { type: sequelize.STRING(15), allowsNulls: true },
         contactDirectLineExt:           { type: sequelize.STRING(20), allowsNulls: true },
         contactDirectLineCountryCode:   { type: sequelize.STRING(4), allowsNulls: false, defaultValue: 1 },
-        docAndHandlingFee:              { type: sequelize.INTEGER(11), allowsNulls: false, defaultValue: 0 }
+        docAndHandlingFee:              { type: sequelize.INTEGER(11), allowsNulls: false, defaultValue: 0 },
+        bookLabel:                      { type: sequelize.STRING(100), allowsNulls: true }
+
       }, {
         timestamps: true,
         createdAt: 'created',
