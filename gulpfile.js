@@ -6,7 +6,7 @@ const
   , plumber     = require('gulp-plumber')       // Handle Errors without breaking
   , eslint      = require('gulp-eslint')        // ES6 JS/JSX Lineter -- Check for syntax errors
   , mocha       = require('gulp-mocha')         // Test Framework
-  , esdoc       = require('gulp-esdoc')         // Documentation Generation
+  , jsdoc       = require('gulp-jsdoc3')        // Documentation Generation
   , config      = require('./build.config')
 ;
 
@@ -62,11 +62,9 @@ gulp.task('test', ['lint'], () => {
     })
 });
 
-gulp.task('docs', ['test'], () => {
-  return gulp.src('./' + devFolder)
-    .pipe(esdoc({
-      destination: docsFolder
-    }));
+gulp.task('docs', ['test'], (done) => {
+  gulp.src(['README.md', './' + devFolder + '**/*.js', './' + config.main], {read:false})
+    .pipe(jsdoc({ opts: { destination: docsFolder } }, done ) );
 });
 
 gulp.task('default', ['docs']);

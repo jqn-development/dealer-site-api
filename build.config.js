@@ -1,5 +1,5 @@
 module.exports = {
-  'main': 'app/server.js',
+  'main': 'app.js',
   'devFolder': 'app/',
   'configFolder': 'config/',
   'docsFolder': 'docs/'
