@@ -70,7 +70,6 @@ describe('REST Endpoint Tests', () => {
     log = new Logger(config).log;
 
     // Inject testing credentials into config object
-    config.credentials.aws = require(__dirname + '/../config/aws.test.credentials.json');
     config.credentials.mysql = require(__dirname + '/../config/mysql.test.credentials.json');
     config.credentials.redis = require(__dirname + '/../config/redis.test.credentials.json');
     // Run on a different port to prevent collisions when testing locally

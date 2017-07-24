@@ -1,5 +1,5 @@
 #!/bin/bash
-source /home/ec2-user/.bash_profile
+source ~/.bash_profile
 
 cd ~/website-api
 npm install
@@ -13,6 +13,14 @@ if [ ! -z "$DEPLOYMENT_GROUP_NAME" ]; then
         echo "export NODE_ENV=$DEPLOYMENT_GROUP_NAME" >> ~/.bash_profile
     else
         sed -i "/export NODE_ENV=\b/c\export NODE_ENV=$DEPLOYMENT_GROUP_NAME" ~/.bash_profile
+    fi
+
+# setup Environment variables
+    hasExports=`grep "source ~/website-api/bin/" ~/.bash_profile | cat`
+    if [ -z "$hasExports" ]; then
+        echo "source ~/website-api/bin/env-$DEPLOYMENT_GROUP_NAME.sh" >> ~/.bash_profile
+    else
+        sed -i "/source ~/website-api/bin/env-\b/c\source ~/website-api/bin/env-$DEPLOYMENT_GROUP_NAME.sh" ~/.bash_profile
     fi
 fi
 

@@ -40,7 +40,6 @@ let libTest = { reqUtils: null, logger: null, cache: null, dbconn: null };
 describe('Library Tests', () => {
   before(() => {
     // Inject testing credentials into config object
-    config.credentials.aws = require(__dirname + '/../config/aws.test.credentials.json');
     config.credentials.mysql = require(__dirname + '/../config/mysql.test.credentials.json');
     config.credentials.redis = require(__dirname + '/../config/redis.test.credentials.json');
     // Load AWS credentials from environment, if they can't be found then use the values in the file

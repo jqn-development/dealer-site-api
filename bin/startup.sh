@@ -1,5 +1,5 @@
 #!/bin/bash
-source /home/ec2-user/.bash_profile
+source ~/.bash_profile
 
 if [ ! -z "$DEPLOYMENT_GROUP_NAME" ]; then
  export NODE_ENV=$DEPLOYMENT_GROUP_NAME

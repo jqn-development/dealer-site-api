@@ -9,6 +9,10 @@ let
 
 ;
 
+/**
+  * Class representing the app
+  * @class App
+  */
 class App {
   constructor() {
     this.logger = {};
@@ -57,6 +61,23 @@ class App {
     process.on('SIGTERM', this.handleSIGTERM.bind(this));
     process.on('SIGINT', this.handleSIGINT.bind(this));
 
+    // Load AWS credentials from environment, if they can't be found then use the values in the file
+    config.credentials.aws.accessKeyId = process.env.AWS_ACCESS_KEY_ID || config.credentials.aws.accessKeyId;
+    config.credentials.aws.secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY || config.credentials.aws.secretAccessKey;
+    config.credentials.aws.region = process.env.EC2_REGION || config.credentials.aws.region;
+
+    // Load AWS credentials from environment, if they can't be found then use the values in the file
+    config.credentials.mysql.host =  process.env.MYSQL_HOST || config.credentials.mysql.host;
+    config.credentials.mysql.user = process.env.MYSQL_USER || config.credentials.mysql.user;
+    config.credentials.mysql.pass = process.env.MYSQL_PASS || config.credentials.mysql.pass;
+    config.credentials.mysql.port = process.env.MYSQL_PORT || config.credentials.mysql.port;
+    config.credentials.mysql.dbname = process.env.MYSQL_DB || config.credentials.mysql.dbname;
+
+    // Load Redis credentials from environment, if they can't be found then use the values in the file
+    config.credentials.redis.host =  process.env.REDIS_HOST || config.credentials.redis.host;
+    config.credentials.redis.port = process.env.REDIS_PORT || config.credentials.redis.port;
+
+    // Start Logging & Server
     this.setupLogging();
     this.server = new Server(config, this.log);
     this.server.init();
