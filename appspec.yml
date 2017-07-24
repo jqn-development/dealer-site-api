@@ -1,0 +1,31 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /home/ec2-user/website-api
+permissions:
+  - object: /
+    pattern: "**"
+    owner: ec2-user
+    group: ec2-user
+hooks:
+  BeforeInstall:
+    - location: bin/install.sh
+      timeout: 300
+      runas: root
+  AfterInstall:
+    - location: bin/post-install.sh
+      timeout: 600
+      runas: ec2-user
+  ApplicationStop:
+    - location: bin/shutdown.sh
+      timeout: 10
+      runas: ec2-user
+  ApplicationStart:
+    - location: bin/startup.sh
+      timeout: 120
+      runas: ec2-user
+  ValidateService:
+    - location: bin/validate.sh
+      timeout: 60
+      runas: ec2-user
