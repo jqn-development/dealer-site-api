@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # update instance
-yum -y update
+sudo yum -y update
 
 # perform other updates here
 
