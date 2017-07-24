@@ -7,6 +7,7 @@ before_script:
 - npm install -g gulp-cli gulp
 script:
 - gulp
+- chmod +x ./build-env.sh
 - ./build-env.sh
 - zip -r -q latest * -x docs logs
 - mkdir -p upload
