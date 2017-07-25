@@ -184,8 +184,9 @@ class Server {
     app.use(this.attachCallID.bind(this));
     app.use(this.controllers.AuthController.authenticateRequest.bind(this.controllers.AuthController));
 
-    // Setup the base server application namespace '/site'
-    app.use('/site', this.router);
+    // Setup the base server application namespace, if it has one
+    // This is '/site' in local testing
+    if (this.config.server.namespace !== '') app.use(this.config.server.namespace, this.router);
 
     // Load routes
     require('./routes')(this.router, this.controllers, this.log);
