@@ -79,6 +79,7 @@ class App {
 
     // Start Logging & Server
     this.setupLogging();
+    this.log.debug(config);
     this.server = new Server(config, this.log);
     this.server.init();
   }

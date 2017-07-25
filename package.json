@@ -7,7 +7,7 @@
     "test": "nyc mocha",
     "build": "gulp",
     "apiKeyTool": "apiKeyTool",
-    "start": "node app/server.js"
+    "start": "node app.js"
   },
   "author": "Jay Reardon <jay.reardon@dealerslink.com>",
   "license": "All Rights Reserved",
