@@ -48,7 +48,9 @@ class Server {
     // Perform gracful shutdown here
     if (_.hasValue(this.cache)) {
       this.log.debug(`Closing connection to Redis Cache`);
-      this.cache.close();
+      this.cache.close()
+      .then(() => {})
+      .catch((err) => {});
     }
 
     if (_.hasValue(this.dbconn)) {
