@@ -2,7 +2,7 @@ module.exports = {
   'server': {
     'port': 8080,
     'shutdownTime': 1000,
-    'namespace': '/site'
+    'namespace': ''
   },
   'logging': { // Logging Configuration
     'logDir': './logs',
@@ -10,7 +10,7 @@ module.exports = {
         'json': false,
         'maxsize': '10000000',
         'maxFiles': '10',
-        'level': 'silly'
+        'level': 'info'
     }
   },
   'credentials': {
@@ -34,6 +34,6 @@ module.exports = {
   },
   'cloudwatch': {
     'logGroupName': 'website-api',
-    'logStreamName': 'local-dev'
+    'logStreamName': 'prodution'
   }
 }

@@ -4,8 +4,8 @@ source ~/.bash_profile
 cd ~/website-api
 npm install
 
-# setup NODE_ENV
 if [ ! -z "$DEPLOYMENT_GROUP_NAME" ]; then
+# setup NODE_ENV
     export NODE_ENV=$DEPLOYMENT_GROUP_NAME
 
     hasEnv=`grep "export NODE_ENV" ~/.bash_profile | cat`
@@ -22,6 +22,9 @@ if [ ! -z "$DEPLOYMENT_GROUP_NAME" ]; then
     else
         sed -i "/source ~/website-api/bin/env-\b/c\source ~/website-api/bin/env-$DEPLOYMENT_GROUP_NAME.sh" ~/.bash_profile
     fi
+
+# copy the correct deployment configuration for the environment
+    cp config/config-$DEPLOYMENT_GROUP_NAME.js config/config.js
 fi
 
 # add node to startup
