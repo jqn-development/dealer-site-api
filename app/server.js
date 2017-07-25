@@ -161,7 +161,11 @@ class Server {
 
   setupCache() {
     this.cache = new Cache(this.config, this.log);
-    this.cache.connect();
+    this.cache.connect()
+    .then(() => {})
+    .catch((err) => {
+      this.log.error(err);
+    });
   }
 
   setupServer(app) {
