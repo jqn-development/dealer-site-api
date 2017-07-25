@@ -23,7 +23,6 @@
     "gulp-notify": "^3.0.0",
     "gulp-plumber": "^1.1.0",
     "gulp-rename": "^1.2.2",
-    "loadtest": "^2.3.0",
     "minimatch": "^3.0.4",
     "mocha": "^3.4.2",
     "nyc": "^11.1.0",
