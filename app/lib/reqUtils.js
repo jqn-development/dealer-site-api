@@ -77,15 +77,29 @@ class ReqUtils {
     req.handler = params;
     req.locals = {};
     let current;
-    for (let key in params) {
-      current = params[key];
-      let value;
-      for (let source of current.source)
-      {
-        // Go through the possible sources in the request
-        value = value || (source === 'headers'?req[source][key.toLowerCase()]:req[source][key]);
+
+    // Check for a body.params and merge it into req.locals
+    if (req.body.params) {
+      // Only merge if the params variable lints to an object
+      let linted = JSON.parse(req.body.params);
+      if (typeof linted === 'object') {
+        req.locals = _.merge(req.locals, linted);
       }
-      req.handler[key].value = req.locals[key] = value;
+    }
+
+    // loadeach key from its respective sources as provided
+    for (let key in params) {
+      // Skip 'params' key as it's a reserved body variable
+      if (key !== 'params') {
+        current = params[key];
+        let value;
+        for (let source of current.source)
+        {
+          // Go through the possible sources in the request
+          value = value || (source === 'headers'?req[source][key.toLowerCase()]:req[source][key]);
+        }
+        req.handler[key].value = req.locals[key] = value;
+      }
     }
   }
 
