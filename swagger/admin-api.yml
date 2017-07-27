@@ -1,0 +1,595 @@
+swagger: '2.0'
+info:
+  description: >-
+    A REST API for interacting with Dealer Site data
+
+    ## Notes
+
+    * Parameters that are defined to be passed in the `params` variable may by
+    directly passed directly as `query`, `header` or `form body` variables
+    instead.
+
+    * Parameters that are defined as `query` variables may be direclty passed as
+    `header` variables instead.
+
+    * `apiKey` may be passed as a `query`, `header`, or `form body` variable.
+
+    * `secret` may be passed as a `header` or `form body` variable.
+
+    * Admin functions can only be accessed by an API Key and Secret key with elevated permissions.
+  version: 1.0.0
+  title: Dealer Site API
+  license:
+    name: All Rights Reserved
+host: '52.90.50.221:8080'
+basePath: /
+tags:
+  - name: admin
+    description: Admin functionality
+schemes:
+  - http
+  - https
+paths:
+  /admin/createAPIKey:
+    post:
+      tags:
+        - admin
+      summary: Create a new API Key
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ACLDataResponse'
+        '400':
+          description: Malformed Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: General Server Error
+      security:
+        - apiKey: []
+        - secret: []
+  /admin/deleteAPIKey:
+    post:
+      tags:
+        - admin
+      summary: Deletes an API Key
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: params
+          required: true
+          schema:
+            $ref: '#/definitions/TargetAPI'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/MessageDataResponse'
+        '400':
+          description: Malformed Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: General Server Error
+      security:
+        - apiKey: []
+        - secret: []
+  /admin/createSite:
+    post:
+      tags:
+        - admin
+      summary: Create a new dealer site
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: params
+          required: true
+          schema:
+            $ref: '#/definitions/SiteDealerData'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/SiteDataResponse'
+        '400':
+          description: Malformed Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: General Server Error
+      security:
+        - apiKey: []
+        - secret: []
+  /admin/createSite/{dealerID}:
+    post:
+      tags:
+        - admin
+      summary: Create a new dealer site
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: dealerID
+          required: true
+          type: integer
+          format: int32
+        - in: body
+          name: params
+          required: true
+          schema:
+            $ref: '#/definitions/SiteData'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/SiteDataResponse'
+        '400':
+          description: Malformed Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: General Server Error
+      security:
+        - apiKey: []
+        - secret: []
+  /admin/updateSite:
+    post:
+      tags:
+        - admin
+      summary: Update the specified Site
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: params
+          required: true
+          schema:
+            $ref: '#/definitions/Site'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/MessageDataResponse'
+        '400':
+          description: Malformed Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: General Server Error
+      security:
+        - apiKey: []
+        - secret: []
+  /admin/updateSite/{siteID}:
+    post:
+      tags:
+        - admin
+      summary: Update the specified Site
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: siteID
+          required: true
+          type: string
+          format: uuid
+        - in: body
+          name: params
+          required: true
+          schema:
+            $ref: '#/definitions/SiteDealerData'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/MessageDataResponse'
+        '400':
+          description: Malformed Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: General Server Error
+      security:
+        - apiKey: []
+        - secret: []
+  /admin/deleteSite:
+    post:
+      tags:
+        - admin
+      summary: Delete the specified site
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: params
+          required: true
+          schema:
+            $ref: '#/definitions/SiteKey'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/MessageDataResponse'
+        '400':
+          description: Malformed Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: General Server Error
+      security:
+        - apiKey: []
+        - secret: []
+  /admin/deleteSite/{siteID}:
+    post:
+      tags:
+        - admin
+      summary: Delete the specified site
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: siteID
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/MessageDataResponse'
+        '400':
+          description: Malformed Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: General Server Error
+      security:
+        - apiKey: []
+        - secret: []
+  /admin/getPermissions:
+    post:
+      tags:
+        - admin
+      summary: Get API Permissions
+      description: 'Returns the permissions of the current APIKey, or the `targetAPIKey` if it is passed'
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: params
+          required: false
+          schema:
+            $ref: '#/definitions/TargetAPI'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ACLFullDataResponse'
+        '400':
+          description: Malformed Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: General Server Error
+      security:
+        - apiKey: []
+        - secret: []
+  /admin/flushCache:
+    post:
+      tags:
+        - admin
+      summary: Flushes the cache
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/MessageDataResponse'
+        '400':
+          description: Malformed Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: General Server Error
+      security:
+        - apiKey: []
+        - secret: []
+  /admin/grantSitePermissions:
+    post:
+      tags:
+        - admin
+      summary: Grants site permissions to an APIKey
+      description: 'If no `targetAPIKey` is passed, then the permissions are granted to the API Key used to invoke the REST endpoint'
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: params
+          required: true
+          schema:
+            $ref: '#/definitions/SiteTargetAPI'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/MessageDataResponse'
+        '400':
+          description: Malformed Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: General Server Error
+      security:
+        - apiKey: []
+        - secret: []
+  /admin/revokeSitePermissions:
+    post:
+      tags:
+        - admin
+      summary: Revokes site permissions to an APIKey
+      description: 'If no `targetAPIKey` is passed, then the permissions are removed from the API Key used to invoke the REST endpoint'
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: params
+          required: true
+          schema:
+            $ref: '#/definitions/SiteTargetAPI'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/MessageDataResponse'
+        '400':
+          description: Malformed Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: General Server Error
+      security:
+        - apiKey: []
+        - secret: []
+securityDefinitions:
+  apiKey:
+    type: apiKey
+    name: apiKey
+    in: header
+  secret:
+    type: apiKey
+    name: secret
+    in: header
+definitions:
+  ACL:
+    type: object
+    properties:
+      apiKey:
+        type: string
+      secretKey:
+        type: string
+      lastupdated:
+        type: string
+        format: date-time
+      created:
+        type: string
+        format: date-time
+  ACLSites:
+    type: object
+    properties:
+      dealerID:
+        type: integer
+        format: int32
+      siteID:
+        type: string
+        format: uuid
+  ACLFull:
+    allOf:
+      - $ref: '#/definitions/ACL'
+      - properties:
+          aclID:
+            type: integer
+            format: int32
+          secretIV:
+            type: string
+            format: uuid
+          secretTimestamp:
+            type: integer
+            format: int64
+          isSuperAdmin:
+            type: boolean
+          isDeleted:
+            type: boolean
+          sites:
+            type: array
+            items:
+              $ref: '#/definitions/ACLSites'
+  TargetAPI:
+    type: object
+    properties:
+      targetAPIKey:
+        type: string
+  DealerKey:
+    type: object
+    properties:
+      dealerID:
+        type: integer
+        format: int32
+  Dealer:
+    allOf:
+      - $ref: '#/definitions/DealerKey'
+  SiteKey:
+    type: object
+    properties:
+      siteID:
+        type: string
+        format: uuid
+  SiteData:
+    type: object
+    properties:
+      baseDomainURL:
+        type: string
+      keywords:
+        type: string
+      description:
+        type: string
+      priceLabelRetailNew:
+        type: string
+      priceLabelRetailUsed:
+        type: string
+      priceLabelInternetNew:
+        type: string
+      priceLabelInternetUsed:
+        type: string
+      bookLabel:
+        type: string
+      supressStockPhotos:
+        type: boolean
+  SiteDealerData:
+    allOf:
+      - $ref: '#/definitions/DealerKey'
+      - $ref: '#/definitions/SiteData'
+  Site:
+    allOf:
+      - $ref: '#/definitions/SiteKey'
+      - $ref: '#/definitions/DealerKey'
+      - $ref: '#/definitions/SiteData'
+  SiteTargetAPI:
+    allOf:
+      - $ref: '#/definitions/SiteKey'
+      - $ref: '#/definitions/TargetAPI'
+  Error:
+    type: object
+    properties:
+      summary:
+        type: string
+      message:
+        type: string
+      details:
+        type: string
+  ErrorResponse:
+    type: object
+    properties:
+      respCode:
+        type: integer
+        format: int32
+      status:
+        type: integer
+        format: int32
+      callID:
+        type: string
+      time:
+        type: string
+      timestamp:
+        type: string
+      error:
+        $ref: '#/definitions/Error'
+  DataResponse:
+    type: object
+    properties:
+      respCode:
+        type: integer
+        format: int32
+      status:
+        type: integer
+        format: int32
+      callID:
+        type: string
+      time:
+        type: string
+      timestamp:
+        type: string
+  MessageDataResponse:
+    allOf:
+      - $ref: '#/definitions/DataResponse'
+      - properties:
+          data:
+            type: object
+            properties:
+              message:
+                type: string
+  ACLDataResponse:
+    allOf:
+      - $ref: '#/definitions/DataResponse'
+      - properties:
+          data:
+            $ref: '#/definitions/ACL'
+  ACLFullDataResponse:
+    allOf:
+      - $ref: '#/definitions/DataResponse'
+      - properties:
+          data:
+            $ref: '#/definitions/ACLFull'
+  SiteDataResponse:
+    allOf:
+      - $ref: '#/definitions/DataResponse'
+      - properties:
+          data:
+            $ref: '#/definitions/Site'
+  DealerDataResponse:
+    allOf:
+      - $ref: '#/definitions/DataResponse'
+      - properties:
+          data:
+            $ref: '#/definitions/Dealer'

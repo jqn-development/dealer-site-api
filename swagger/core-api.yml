@@ -1,0 +1,882 @@
+swagger: '2.0'
+info:
+  description: >-
+    A REST API for interacting with Dealer Site data
+
+    ## Notes
+
+    * Parameters that are defined to be passed in the `params` variable may by
+    directly passed directly as `query`, `header` or `form body` variables
+    instead.
+
+    * Parameters that are defined as `query` variables may be direclty passed as
+    `header` variables instead.
+  version: 1.0.0
+  title: Dealer Site API
+  contact:
+    email: dev@dealerslink.com
+  license:
+    name: All Rights Reserved
+host: '52.90.50.221:8080'
+basePath: /
+tags:
+  - name: config
+    description: Everything about Site Configurations
+  - name: dealer
+    description: Everything about Dealers
+  - name: field
+    description: Everything about Dynamic Fields
+  - name: vehicle
+    description: Everything about Vehicles
+  - name: customer
+    description: Everything about Customers
+  - name: lead
+    description: Everything about Sales Leads
+  - name: financeApp
+    description: Everything about Finance Applications
+schemes:
+  - http
+  - https
+paths:
+  /config:
+    get:
+      tags:
+        - config
+      summary: Retrieve a site configuration for a given `siteID`
+      description: ''
+      operationId: getConfig
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: siteID
+          description: SiteID of the site config to retrieve
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ConfigDataResponse'
+        '400':
+          description: Malformed Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: General Server Error
+      security:
+        - apiKey: []
+    put:
+      tags:
+        - config
+      summary: Retrieve a site configuration for a given `siteID`
+      description: ''
+      operationId: updateConfig
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: params
+          description: Site Configuration object to update
+          required: true
+          schema:
+            $ref: '#/definitions/Config'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/MessageDataResponse'
+        '400':
+          description: Malformed Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: General Server Error
+      security:
+        - apiKey: []
+        - secret: []
+  '/config/{siteID}':
+    parameters:
+      - in: path
+        name: siteID
+        description: SiteID of the site config to retrieve
+        required: true
+        type: integer
+        format: int32
+    get:
+      tags:
+        - config
+      summary: Retrieve a site configuration for a given `siteID`
+      description: ''
+      operationId: getConfigPath
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ConfigDataResponse'
+        '400':
+          description: Malformed Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: General Server Error
+      security:
+        - apiKey: []
+    put:
+      tags:
+        - config
+      summary: Retrieve a site configuration for a given `siteID`
+      description: ''
+      operationId: updateConfigPath
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: params
+          description: Site Configuration object to update
+          required: true
+          schema:
+            $ref: '#/definitions/Config'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/MessageDataResponse'
+        '400':
+          description: Malformed Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: General Server Error
+      security:
+        - apiKey: []
+        - secret: []
+  /dealer:
+    get:
+      tags:
+        - dealer
+      summary: Retrieve a dealer's information
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: dealerID
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/DealerDataResponse'
+        '400':
+          description: Malformed Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: General Server Error
+      security:
+        - apiKey: []
+  '/dealer/{dealerID}':
+    parameters:
+      - in: path
+        name: dealerID
+        required: true
+        type: integer
+        format: int32
+    get:
+      tags:
+        - dealer
+      summary: Retrieve a dealer's information
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/DealerDataResponse'
+        '400':
+          description: Malformed Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: General Server Error
+      security:
+        - apiKey: []
+  /field:
+    post:
+      tags:
+        - field
+      summary: Create a dynamic field
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: params
+          required: true
+          schema:
+            $ref: '#/definitions/Field'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/MessageDataResponse'
+        '400':
+          description: Malformed Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: General Server Error
+      security:
+        - apiKey: []
+        - secret: []
+    get:
+      tags:
+        - field
+      summary: Retrieve a dynamic field
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: fieldLabel
+          required: true
+          type: string
+        - in: query
+          name: dealerID
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/FieldDataResponse'
+        '400':
+          description: Malformed Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: General Server Error
+      security:
+        - apiKey: []
+    put:
+      tags:
+        - field
+      summary: Update a dynamic field
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: params
+          required: true
+          schema:
+            $ref: '#/definitions/Field'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/MessageDataResponse'
+        '400':
+          description: Malformed Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: General Server Error
+      security:
+        - apiKey: []
+        - secret: []
+    delete:
+      tags:
+        - field
+      summary: Delete a dynamic field
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: params
+          required: true
+          schema:
+            $ref: '#/definitions/FieldBase'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/MessageDataResponse'
+        '400':
+          description: Malformed Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: General Server Error
+      security:
+        - apiKey: []
+        - secret: []
+  /field/all:
+    get:
+      tags:
+        - field
+      summary: Retrieve all dynamic field for a dealer
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: dealerID
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/FieldArrayDataResponse'
+        '400':
+          description: Malformed Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: General Server Error
+      security:
+        - apiKey: []
+  '/field/{fieldLabel}':
+    parameters:
+      - in: path
+        name: fieldLabel
+        required: true
+        type: string
+    get:
+      tags:
+        - field
+      summary: Retrieve a dynamic field
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: dealerID
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/FieldDataResponse'
+        '400':
+          description: Malformed Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: General Server Error
+      security:
+        - apiKey: []
+    put:
+      tags:
+        - field
+      summary: Update a dynamic field
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: params
+          required: true
+          schema:
+            $ref: '#/definitions/FieldUpdate'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/MessageDataResponse'
+        '400':
+          description: Malformed Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: General Server Error
+      security:
+        - apiKey: []
+        - secret: []
+    delete:
+      tags:
+        - field
+      summary: Delete a dynamic field
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: params
+          required: true
+          schema:
+            $ref: '#/definitions/DealerKey'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/MessageDataResponse'
+        '400':
+          description: Malformed Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: General Server Error
+      security:
+        - apiKey: []
+        - secret: []
+  /vehicle:
+    get:
+      tags:
+        - vehicle
+      summary: Retrieve a vehicle
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: vehicleID
+          required: true
+          type: integer
+          format: int32
+        - in: query
+          name: dealerID
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/VehicleDataResponse'
+        '400':
+          description: Malformed Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: General Server Error
+      security:
+        - apiKey: []
+  '/vehicle/{vehicleID}':
+    parameters:
+      - in: path
+        name: vehicleID
+        required: true
+        type: integer
+        format: int32
+    get:
+      tags:
+        - vehicle
+      summary: Retrieve a vehicle
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: dealerID
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/VehicleDataResponse'
+        '400':
+          description: Malformed Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: General Server Error
+      security:
+        - apiKey: []
+  /vehicle/all:
+    get:
+      tags:
+        - vehicle
+      summary: Retrieve all dealer vehicles
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: vehicleID
+          required: true
+          type: integer
+          format: int32
+        - in: query
+          name: dealerID
+          required: true
+          type: integer
+          format: int32
+        - in: query
+          name: page
+          description: 'The page of results to return. ***Default: 1***'
+          required: false
+          type: integer
+          format: int32
+        - in: query
+          name: limit
+          description: 'The number of results to limit each page to. ***Default: 20***'
+          required: false
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/VehicleArrayDataResponse'
+        '400':
+          description: Malformed Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: General Server Error
+      security:
+        - apiKey: []
+  '/vehicle/all/{page}':
+    parameters:
+      - in: path
+        name: page
+        description: The page of results to return
+        required: true
+        type: integer
+        format: int32
+    get:
+      tags:
+        - vehicle
+      summary: Retrieve all dealer vehicles
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: vehicleID
+          required: true
+          type: integer
+          format: int32
+        - in: query
+          name: dealerID
+          required: true
+          type: integer
+          format: int32
+        - in: query
+          name: limit
+          description: The number of results to limit each page to.
+          required: false
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/VehicleArrayDataResponse'
+        '400':
+          description: Malformed Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: General Server Error
+      security:
+        - apiKey: []
+  '/vehicle/all/{page}/{limit}':
+    parameters:
+      - in: path
+        name: page
+        description: The page of results to return
+        required: true
+        type: integer
+        format: int32
+      - in: path
+        name: limit
+        description: The number of results to limit each page to
+        required: true
+        type: integer
+        format: int32
+    get:
+      tags:
+        - vehicle
+      summary: Retrieve all dealer vehicles
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: vehicleID
+          required: true
+          type: integer
+          format: int32
+        - in: query
+          name: dealerID
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/VehicleArrayDataResponse'
+        '400':
+          description: Malformed Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: General Server Error
+      security:
+        - apiKey: []
+securityDefinitions:
+  apiKey:
+    type: apiKey
+    name: apiKey
+    in: header
+  secret:
+    type: apiKey
+    name: secret
+    in: header
+definitions:
+  Config:
+    type: object
+    properties:
+      siteID:
+        type: string
+        format: uuid
+      dealerID:
+        type: integer
+        format: int32
+      baseDomainURL:
+        type: string
+      keywords:
+        type: string
+      description:
+        type: string
+      priceLabelRetailNew:
+        type: string
+      priceLabelRetailUsed:
+        type: string
+      priceLabelInternetNew:
+        type: string
+      priceLabelInternetUsed:
+        type: string
+      bookLabel:
+        type: string
+      supressStockPhotos:
+        type: boolean
+  DealerKey:
+    type: object
+    properties:
+      dealerID:
+        type: integer
+        format: int32
+  Dealer:
+    allOf:
+      - $ref: '#/definitions/DealerKey'
+  FieldKey:
+    type: object
+    properties:
+      fieldLabel:
+        type: string
+  FieldBase:
+    allOf:
+      - $ref: '#/definitions/FieldKey'
+      - $ref: '#/definitions/DealerKey'
+  FieldData:
+    type: object
+    properties:
+      imageURL:
+        type: string
+      textContent:
+        type: string
+  FieldUpdate:
+    allOf:
+      - $ref: '#/definitions/DealerKey'
+      - $ref: '#/definitions/FieldData'
+  Field:
+    allOf:
+      - $ref: '#/definitions/FieldBase'
+      - $ref: '#/definitions/FieldData'
+  Vehicle:
+    type: object
+    properties:
+      vehicleID:
+        type: integer
+        format: int32
+      dealerID:
+        type: integer
+        format: int32
+  Error:
+    type: object
+    properties:
+      summary:
+        type: string
+      message:
+        type: string
+      details:
+        type: string
+  ErrorResponse:
+    type: object
+    properties:
+      respCode:
+        type: integer
+        format: int32
+      status:
+        type: integer
+        format: int32
+      callID:
+        type: string
+      time:
+        type: string
+      timestamp:
+        type: string
+      error:
+        $ref: '#/definitions/Error'
+  DataResponse:
+    type: object
+    properties:
+      respCode:
+        type: integer
+        format: int32
+      status:
+        type: integer
+        format: int32
+      callID:
+        type: string
+      time:
+        type: string
+      timestamp:
+        type: string
+  MessageDataResponse:
+    allOf:
+      - $ref: '#/definitions/DataResponse'
+      - properties:
+          data:
+            type: object
+            properties:
+              message:
+                type: string
+  ConfigDataResponse:
+    allOf:
+      - $ref: '#/definitions/DataResponse'
+      - properties:
+          data:
+            $ref: '#/definitions/Config'
+  DealerDataResponse:
+    allOf:
+      - $ref: '#/definitions/DataResponse'
+      - properties:
+          data:
+            $ref: '#/definitions/Dealer'
+  FieldDataResponse:
+    allOf:
+      - $ref: '#/definitions/DataResponse'
+      - properties:
+          data:
+            $ref: '#/definitions/Field'
+  FieldArrayDataResponse:
+    allOf:
+      - $ref: '#/definitions/DataResponse'
+      - properties:
+          data:
+            type: array
+            items:
+              $ref: '#/definitions/Field'
+  VehicleDataResponse:
+    allOf:
+      - $ref: '#/definitions/DataResponse'
+      - properties:
+          data:
+            $ref: '#/definitions/Vehicle'
+  VehicleArrayDataResponse:
+    allOf:
+      - $ref: '#/definitions/DataResponse'
+      - properties:
+          data:
+            type: array
+            items:
+              $ref: '#/definitions/Vehicle'
+externalDocs:
+  description: Find out more about Swagger
+  url: 'http://swagger.io'
