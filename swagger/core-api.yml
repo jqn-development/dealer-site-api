@@ -574,11 +574,6 @@ paths:
         - application/json
       parameters:
         - in: query
-          name: vehicleID
-          required: true
-          type: integer
-          format: int32
-        - in: query
           name: dealerID
           required: true
           type: integer
@@ -629,11 +624,6 @@ paths:
         - application/json
       parameters:
         - in: query
-          name: vehicleID
-          required: true
-          type: integer
-          format: int32
-        - in: query
           name: dealerID
           required: true
           type: integer
@@ -683,11 +673,6 @@ paths:
       produces:
         - application/json
       parameters:
-        - in: query
-          name: vehicleID
-          required: true
-          type: integer
-          format: int32
         - in: query
           name: dealerID
           required: true
@@ -877,6 +862,3 @@ definitions:
             type: array
             items:
               $ref: '#/definitions/Vehicle'
-externalDocs:
-  description: Find out more about Swagger
-  url: 'http://swagger.io'
