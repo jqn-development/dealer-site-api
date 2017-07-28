@@ -12,6 +12,13 @@ const
 ;
 
 class Logger {
+  /**
+   * A utility class to wrap Winston logging
+   * @class Logger
+   * @param {object} config - A global configuration object that may contain options on how to initialize the logger
+   * @example
+   * let logger = new logger(config);
+   */
   constructor(config) {
     this.logDir = config.logging.logDir || './logs';
 

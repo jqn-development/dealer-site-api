@@ -5,9 +5,14 @@ const
   , validate          = require('./validate')
 ;
 
-// This class exists to move repeated functionality out of controllers to reduce
-// repeated code
 class ReqUtils {
+  /**
+   * A utility class to process common HTTP request parameters and handling. This class exists to move repeated functionality out of controllers to reduce repeated code
+   * @class ReqUtils
+   * @param {Request} req - The HTTP Request object (e.g. from `express` or some other HTTP handler)
+   * @example
+   * let reqUtils = new ReqUtils(req);
+   */
   constructor(req) {
     this.req = req;
   }
@@ -154,7 +159,7 @@ class ReqUtils {
   // Expects an object containing the value and types for each named key
   // e.g. { dealerID: { value: 100, type: 'int' } }
   // Returns the array of non-matching values
-  // FIXME -- There is a bug when a default value is provided in the params and the values are mismatched types, it makes the 'handler' appear to be undefined
+  // FIXME: There is a bug when a default value is provided in the params and the values are mismatched types, it makes the 'handler' appear to be undefined
   validateParams(params) {
     let test = [];
     let current;
@@ -223,7 +228,7 @@ class ReqUtils {
         let err = 'The parameter(s) ';
         let c = 0;
         for (let value of invalidParams) {
-          if (c > 0) err =  err + ', ';
+          if (c > 0) err = err + ', ';
           err += `'${value.key}' should be type '${value.type}'`;
           c += 1;
         }
