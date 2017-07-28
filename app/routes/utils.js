@@ -7,6 +7,6 @@ const
 module.exports = function(app, controllers, log) {
 
   // util READ
-  app.get('/util', controllers.StubController.action.bind(controllers.StubController));
+  app.get('/util/*', controllers.StubController.action.bind(controllers.StubController));
 
 }
